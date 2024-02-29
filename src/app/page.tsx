@@ -1,18 +1,14 @@
 import Head from 'next/head';
+import WelcomeBar from '@/app/components/ui/welcome-bar';
+import SideNav from './components/ui/sidenav';
+
 
 function IndexPage() {
+
   return (
     <div>
-      <header className="bg-[#20146a] px-12 h-20">
-        <nav className="flex items-center justify-between">
-          <div></div>
-          <div className="text-2xl font-bold text-white">
-            California Collision Insights
-          </div>
-          <div>
-          </div>
-        </nav>
-      </header>
+      <SideNav></SideNav>
+      <WelcomeBar></WelcomeBar>
     </div>
   )
 }
