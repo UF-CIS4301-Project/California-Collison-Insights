@@ -1,0 +1,4 @@
+# .gitignore file specific to data_processing folder
+
+# this sqlite file is too large to commit to GitHub, too large even for GitHub LFS
+input/california_traffic_collisions.sqlite

@@ -1,5 +1,2 @@
-# this sqlite file is too large to commit to GitHub, too large even for GitHub LFS
-data/data_processing/california_traffic_collisions.sqlite
-
 # IDE files to ignores
 .idea

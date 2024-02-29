@@ -1,0 +1,21 @@
+--------------- Longest string lengths from collisions --------------
+collision_severity : 20
+pcf_violation_category : 33
+county_location : 15
+primary_road : 50
+statewide_vehicle_type_at_fault : 35
+weather_1 : 7
+weather_2 : 7
+road_surface : 8
+road_condition_1 : 14
+road_condition_2 : 14
+lighting : 39
+
+--------------- Longest string lengths from parties --------------
+vehicle_make : 28
+party_race : 8
+party_sex : 6
+
+--------------- Longest string lengths from victims --------------
+victim_degree_of_injury : 24
+
