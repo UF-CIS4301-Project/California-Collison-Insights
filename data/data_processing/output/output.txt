@@ -1,21 +1,21 @@
 --------------- Longest string lengths from collisions --------------
-collision_severity : 20
-pcf_violation_category : 33
-county_location : 15
-primary_road : 50
-statewide_vehicle_type_at_fault : 35
-weather_1 : 7
-weather_2 : 7
-road_surface : 8
-road_condition_1 : 14
-road_condition_2 : 14
-lighting : 39
+Column: collision_severity | Longest String: 20 | Number of nulls: 0
+Column: pcf_violation_category | Longest String: 33 | Number of nulls: 156803
+Column: county_location | Longest String: 15 | Number of nulls: 0
+Column: primary_road | Longest String: 50 | Number of nulls: 25
+Column: statewide_vehicle_type_at_fault | Longest String: 35 | Number of nulls: 1867336
+Column: weather_1 | Longest String: 7 | Number of nulls: 45221
+Column: weather_2 | Longest String: 7 | Number of nulls: 9161454
+Column: road_surface | Longest String: 8 | Number of nulls: 81164
+Column: road_condition_1 | Longest String: 14 | Number of nulls: 78298
+Column: road_condition_2 | Longest String: 14 | Number of nulls: 9385372
+Column: lighting | Longest String: 39 | Number of nulls: 53308
 
 --------------- Longest string lengths from parties --------------
-vehicle_make : 28
-party_race : 8
-party_sex : 6
+Column: vehicle_make | Longest String: 28 | Number of nulls: 1949861
+Column: party_race | Longest String: 8 | Number of nulls: 4374129
+Column: party_sex | Longest String: 6 | Number of nulls: 2499043
 
 --------------- Longest string lengths from victims --------------
-victim_degree_of_injury : 24
+Column: victim_degree_of_injury | Longest String: 24 | Number of nulls: 0
 
