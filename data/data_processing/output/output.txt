@@ -1,21 +1,68 @@
---------------- Longest string lengths from collisions --------------
-Column: collision_severity | Longest String: 20 | Number of nulls: 0
-Column: pcf_violation_category | Longest String: 33 | Number of nulls: 156803
-Column: county_location | Longest String: 15 | Number of nulls: 0
-Column: primary_road | Longest String: 50 | Number of nulls: 25
-Column: statewide_vehicle_type_at_fault | Longest String: 35 | Number of nulls: 1867336
-Column: weather_1 | Longest String: 7 | Number of nulls: 45221
-Column: weather_2 | Longest String: 7 | Number of nulls: 9161454
-Column: road_surface | Longest String: 8 | Number of nulls: 81164
-Column: road_condition_1 | Longest String: 14 | Number of nulls: 78298
-Column: road_condition_2 | Longest String: 14 | Number of nulls: 9385372
-Column: lighting | Longest String: 39 | Number of nulls: 53308
+--------------- Longest string lengths from Table: collisions --------------
+Column: collision_severity | Longest String: 20
+Column: pcf_violation_category | Longest String: 33
+Column: county_location | Longest String: 15
+Column: primary_road | Longest String: 50
+Column: statewide_vehicle_type_at_fault | Longest String: 35
+Column: weather_1 | Longest String: 7
+Column: weather_2 | Longest String: 7
+Column: road_surface | Longest String: 8
+Column: road_condition_1 | Longest String: 14
+Column: road_condition_2 | Longest String: 14
+Column: lighting | Longest String: 39
 
---------------- Longest string lengths from parties --------------
-Column: vehicle_make | Longest String: 28 | Number of nulls: 1949861
-Column: party_race | Longest String: 8 | Number of nulls: 4374129
-Column: party_sex | Longest String: 6 | Number of nulls: 2499043
+--------------- Longest string lengths from Table: parties --------------
+Column: vehicle_make | Longest String: 28
+Column: party_race | Longest String: 8
+Column: party_sex | Longest String: 6
 
---------------- Longest string lengths from victims --------------
-Column: victim_degree_of_injury | Longest String: 24 | Number of nulls: 0
+--------------- Longest string lengths from Table: victims --------------
+Column: victim_degree_of_injury | Longest String: 24
+
+--------------- Largest numbers from Table: collisions --------------
+Column: case_id | Largest number: 9870011231152508671
+
+--------------- Largest numbers from Table: parties --------------
+Column: case_id | Largest number: 9870011231152508671
+Column: id | Largest number: 16432243
+Column: party_number | Largest number: 92
+Column: vehicle_year | Largest number: 8744
+Column: party_age | Largest number: 125
+
+--------------- Largest numbers from Table: victims --------------
+Column: id | Largest number: 8817535
+Column: case_id | Largest number: 9870011231152508671
+Column: party_number | Largest number: 89
+
+--------------- NULL values from Table: collisions --------------
+Column: case_id | Number of nulls: 0
+Column: collision_severity | Number of nulls: 0
+Column: pcf_violation_category | Number of nulls: 156803
+Column: county_location | Number of nulls: 0
+Column: primary_road | Number of nulls: 25
+Column: statewide_vehicle_type_at_fault | Number of nulls: 1867336
+Column: collision_date | Number of nulls: 0
+Column: collision_time | Number of nulls: 82415
+Column: weather_1 | Number of nulls: 45221
+Column: weather_2 | Number of nulls: 9161454
+Column: road_surface | Number of nulls: 81164
+Column: road_condition_1 | Number of nulls: 78298
+Column: road_condition_2 | Number of nulls: 9385372
+Column: lighting | Number of nulls: 53308
+
+--------------- NULL values from Table: parties --------------
+Column: id | Number of nulls: 0
+Column: case_id | Number of nulls: 0
+Column: party_number | Number of nulls: 0
+Column: vehicle_year | Number of nulls: 1777184
+Column: vehicle_make | Number of nulls: 1949861
+Column: party_age | Number of nulls: 2914711
+Column: party_race | Number of nulls: 4374129
+Column: party_sex | Number of nulls: 2499043
+
+--------------- NULL values from Table: victims --------------
+Column: id | Number of nulls: 0
+Column: case_id | Number of nulls: 0
+Column: party_number | Number of nulls: 0
+Column: victim_degree_of_injury | Number of nulls: 0
 
