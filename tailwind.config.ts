@@ -15,6 +15,11 @@ const config: Config = {
       },
     },
   },
+  variants: {
+    extend: {
+      padding: ['hover'],
+    }
+  },
   plugins: [],
 };
 export default config;
