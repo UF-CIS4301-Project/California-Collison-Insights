@@ -1,6 +1,6 @@
 export default function VehicleType() {
   return (
-    <div>
+    <div className="bg-gray-100">
       Vehicle type
     </div>
   )

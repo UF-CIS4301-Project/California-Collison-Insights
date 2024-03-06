@@ -19,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased md:p-22 absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]`}>
-        <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+        <div className="flex h-screen flex-col md:flex-row">
           <WelcomeBar></WelcomeBar>
           <SideNav></SideNav>
-          <div className="flex-grow pl-32 pt-20 md:overflow-y-auto ">
-            <main>{children}</main>
+          <div className="flex-grow pl-32 pt-20">
+            <main className="">{children}</main>
           </div>
         </div>
       </body>
