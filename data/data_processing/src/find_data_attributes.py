@@ -93,7 +93,7 @@ def find_null_count(output_path, database_path, database_table, columns):
 
 def column_attributes():
     # output data file path, make the output directory if it doesn't exist
-    output_dir = 'output'
+    output_dir = '../output'
     result_file_path = os.path.join(output_dir, 'output.txt')
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -102,7 +102,7 @@ def column_attributes():
     open(result_file_path, 'w').close()
 
     # Define the traffic data input path
-    traffic_data_path = 'input/california_traffic_collisions.sqlite'
+    traffic_data_path = '../input/california_traffic_collisions.sqlite'
 
     # Find the longest strings of each column in each table
     selected_table = 'collisions'
