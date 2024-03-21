@@ -2,3 +2,6 @@
 
 # this sqlite file is too large to commit to GitHub, too large even for GitHub LFS
 input/california_traffic_collisions.sqlite
+
+# ignores all csv output files, since they are too large for a commit
+*.csv
