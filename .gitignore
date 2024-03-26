@@ -1,2 +1,5 @@
 # IDE files to ignores
 .idea
+
+# server file to store
+.env

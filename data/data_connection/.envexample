@@ -1,0 +1,5 @@
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+DB_HOST=oracle.cise.ufl.edu
+DB_PORT=1521
+DB_SERVICE_NAME_OR_SID=orcl
