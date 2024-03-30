@@ -6,13 +6,14 @@ function QueriesPage() {
   return (
     <div className="">
 
-      <div className='flex flex-row min-h-screen justify-center mt-40'>
+      <div className='flex flex-row h-[75vh] justify-center mt-40'>
 
         <ul className='text-xl flex-col space-y-12 p-6'>
           {/* <span className="text-3xl">Queries</span> */}
           {queries.map((queryName) => (
             <li className="text-2xl text-center bg-white hover:bg-black text-black font-semibold hover:text-white py-4 px-4 hover:border-transparent rounded shadow-lg" key={queryName.key}>
-              <Link href={`/queries/${queryName.key}`} key="">{queryName.value}</Link></li>
+              <Link href={`/queries/${queryName.key}`} key="" className="">
+                <span className="relative after:bg-white after:absolute after:h-1 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer">{queryName.value}</span></Link></li>
           ))}
         </ul>
       </div>
