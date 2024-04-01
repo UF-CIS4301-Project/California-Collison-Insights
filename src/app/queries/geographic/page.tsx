@@ -57,6 +57,7 @@ export default function Geographic() {
         <div className="w-1/12"></div>
         <div className="h-[80vh] w-2/3 divide-y-2 divide-black" id="input-parameters">
 
+          {/* Timeline range selector - currently only selects one year but can be changed to select a range of years */}
           <div className="h-1/2 flex flex-col py-2 items-center justify-center" id="time option selector">
             <div className=" w-full">
               <div className="flex justify-between">
@@ -64,9 +65,11 @@ export default function Geographic() {
                 <span className="">{year}</span>
                 <span className="text-2xl pb-2">2020</span>
               </div>
+              {/* Range slider to select the year */}
               <input id="steps-range" type="range" min="2000" max="2020" defaultValue="2010" step="1" onChange={(e) => onValueChange(e.target.value)} className="flex flex-row w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
               <div className="flex flex-row items-center text-lg">
                 <span className="pr-4 pl-20">By</span>
+                {/* Dropdown box on how to group the data? */}
                 <Listbox value={selectedTime} onChange={setSelectedTime} className="py-4">
                   <div className="">
                     <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -120,6 +123,7 @@ export default function Geographic() {
           </div>
           <div className="flex h-1/2 flex-row items-center justify-around">
 
+            {/* Time of day dropdown menu */}
             <div className="flex flex-row items-center text-lg">
               <span className="pr-4">Time of day</span>
               <Listbox value={selectedTimeOfDay} onChange={setTimeOfDay} className="py-2">
@@ -172,6 +176,7 @@ export default function Geographic() {
               </Listbox>
             </div>
 
+            {/* Weather condition dropdown menu */}
             <div className="flex flex-rows items-center text-lg">
               <span className="pr-4">Weather Conditions</span>
               <Listbox value={selectedWeather} onChange={setWeather} className="py-2">
@@ -227,13 +232,16 @@ export default function Geographic() {
           </div>
         </div>
         <div className="w-1/12"></div>
+        {/* Map and information card - After hovering over a certain county, the county's information will be output to the card. Currently, only the county name shows */}
         <div className="flex flex-col flex-row h-[80vh] w-1/3 justify-center">
+          {/* County information box */}
           <Card style={{ width: '24rem' }} className="flex flex-col outline-2 shadow-md hover:shadow-lg p-2 bg-white rounded-md  text-lg font-bold">
             <Card.Title>County: {selectedCounty}</Card.Title>
             <Card.Subtitle>Generic Attribute: Generic Value</Card.Subtitle>
             <Card.Subtitle>Generic Attribute: Generic Value</Card.Subtitle>
             <Card.Subtitle>Generic Attribute: Generic Value</Card.Subtitle>
           </Card>
+          {/* Map of california by county */}
           <div className="p-4 h-[75vh] w-full">
             <ComposableMap className="h-full w-full"
               projection="geoMercator"

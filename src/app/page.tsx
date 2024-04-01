@@ -12,6 +12,7 @@ function IndexPage() {
           <div className="p-10 text-justify rounded shadow-lg bg-white">Welcome Spiel - Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, et sint nulla beatae non eveniet accusantium ratione velit corrupti labore odio quam voluptatum recusandae culpa quae nesciunt corporis. Architecto, asperiores? Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae quaerat illum eveniet deleniti fugiat! Adipisci, voluptate praesentium ut id dolor ipsam ullam expedita in mollitia eligendi enim ducimus, porro cupiditate.</div>
           <div className="my-10 text-3xl">Feel free to explore the datasets we used</div>
 
+        {/* Box components which describe and link to each of our datasets - currently just holds dummy data/text  */}
           <div className="flex flex-rows justify-evenly">
             {datasets.map((set => (
               <Link href="">
