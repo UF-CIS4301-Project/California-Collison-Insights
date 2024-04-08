@@ -50,7 +50,7 @@ export default function Home() {
   };
 
   // Graph data - currently holds dummy data
-  const data = {
+  const [data, setData] = useState({
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
       {
@@ -67,6 +67,24 @@ export default function Home() {
         borderColor: '#742774',
       },
     ],
+  })
+
+  const updateDataset = () => {
+    const newData = data.datasets[0].data.map(value => value + Math.floor(Math.random() * 10))
+    const newData2 = data.datasets[1].data.map(value => value + Math.floor(Math.random() * 10))
+    setData({
+      ...data,
+      datasets: [
+        {
+          ...data.datasets[0],
+          data: newData
+        },
+        {
+          ...data.datasets[1],
+          data: newData2
+        }
+      ]
+    })
   }
 
   return (
@@ -251,7 +269,7 @@ export default function Home() {
         </div>
 
         <div id="search-button" className="flex w-1/4 flex-row justify-center">
-          <button className="flex bg-white shadow-lg hover:bg-black hover:text-bold text-gray-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded">
+          <button className="flex bg-white shadow-lg hover:bg-black hover:text-bold text-gray-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded" onClick={updateDataset}>
             Enter Query
           </button>
         </div>

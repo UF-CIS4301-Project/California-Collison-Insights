@@ -19,7 +19,7 @@ function IndexPage() {
           <div className="p-10 text-justify rounded shadow-lg bg-white">Welcome Spiel - Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, et sint nulla beatae non eveniet accusantium ratione velit corrupti labore odio quam voluptatum recusandae culpa quae nesciunt corporis. Architecto, asperiores? Lorem ipsum dolor sit amet consectetur adipisicing elit.
           <br/>
           <br/>
-          Click <button>here</button> for total number of tuples in database: {selectedTuples}
+          Click <button className="">here</button> for total number of tuples in database: {selectedTuples}
           </div>
           <div className="my-10 text-3xl">Feel free to explore the datasets we used</div>
 
