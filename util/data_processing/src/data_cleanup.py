@@ -13,37 +13,50 @@ def export_to_csv(database_file, table_name, column_names, output_file):
         csv_writer = csv.writer(csvfile)
 
         columns_str = ', '.join([f'{table_name}.{column}' for column in column_names])
+        where_columns = [] + column_names
+
+        if table_name == "collisions":
+            where_columns.remove('road_condition_2')
+            where_columns.remove('weather_2')
+
+        where_conditions = ' AND '.join(f"{table_name}.{column} IS NOT NULL" for column in where_columns)
+        where_conditions += " AND collision_datetime IS NOT NULL "
 
         query = ""
         if table_name == "collisions":
-            csv_writer.writerow(column_names)
+            csv_writer.writerow(column_names + ["collision_datetime"])
             query = f"""
-                SELECT {columns_str}
+                SELECT {columns_str},
+                        strftime('%Y-%m-%d %H:%M:%S', collisions.collision_date || ' ' || collisions.collision_time) AS collision_datetime
                 FROM {table_name}
-                WHERE SUBSTR({table_name}.collision_date, 1, 4) BETWEEN '2003' AND '2020';
+                WHERE
+                        {where_conditions}
+                        AND SUBSTR(collisions.collision_date, 1, 4) BETWEEN '2003' AND '2020';
             """
 
         elif table_name == "parties":
-            csv_writer.writerow(column_names + ["collision_date"] + ["collision_time"])
+            csv_writer.writerow(["party_id"] + column_names[1:] + ["collision_datetime"])
             query = f"""
                 SELECT {columns_str}, 
-                        collisions.collision_date,
-                        collisions.collision_time
+                        strftime('%Y-%m-%d %H:%M:%S', collisions.collision_date || ' ' || collisions.collision_time) AS collision_datetime
                 FROM collisions
                 JOIN {table_name} ON collisions.case_id = {table_name}.case_id
-                WHERE SUBSTR(collisions.collision_date, 1, 4) BETWEEN '2003' AND '2020';
+                WHERE
+                        {where_conditions}
+                        AND SUBSTR(collisions.collision_date, 1, 4) BETWEEN '2003' AND '2020';
             """
 
         elif table_name == "victims":
-            csv_writer.writerow(column_names + ["collision_date"] + ["collision_time"] + ["victim_degree_of_injury"])
+            csv_writer.writerow(["victim_id"] + column_names[1:] + ["was_victim_killed"] + ["collision_datetime"])
             query = f"""
                 SELECT {columns_str},
-                        collisions.collision_date,
-                        collisions.collision_time,
-                        CASE WHEN {table_name}.victim_degree_of_injury = 'killed' THEN 1 ELSE 0 END AS boolean_column
+                        CASE WHEN {table_name}.victim_degree_of_injury = 'killed' THEN 1 ELSE 0 END AS was_victim_killed,
+                        strftime('%Y-%m-%d %H:%M:%S', collisions.collision_date || ' ' || collisions.collision_time) AS collision_datetime
                 FROM collisions
                 JOIN {table_name} ON collisions.case_id = {table_name}.case_id
-                WHERE SUBSTR(collisions.collision_date, 1, 4) BETWEEN '2003' AND '2020';
+                WHERE
+                        {where_conditions}
+                        AND SUBSTR(collisions.collision_date, 1, 4) BETWEEN '2003' AND '2020';
             """
 
         cursor.execute(query)
@@ -72,11 +85,12 @@ def main():
     database_file = "../input/california_traffic_collisions.sqlite"
 
     tables = {
-        "collisions": ['case_id', 'collision_severity', 'pcf_violation_category', 'county_location', 'primary_road',
-                       'statewide_vehicle_type_at_fault', 'collision_date', 'collision_time', 'weather_1', 'weather_2',
-                       'road_surface', 'road_condition_1', 'road_condition_2', 'lighting'],
-        "parties": ['id', 'case_id', 'party_number', 'vehicle_year', 'vehicle_make', 'party_age', 'party_race',
-                    'party_sex'],
+        "collisions": ['case_id', 'collision_severity', 'pcf_violation_category', 'county_location',
+                       'statewide_vehicle_type_at_fault', 'weather_1', 'weather_2', 'road_surface', 'road_condition_1',
+                       'road_condition_2', 'lighting']
+        ,
+        "parties": ['id', 'case_id', 'party_number', 'at_fault', 'vehicle_year', 'party_age', 'party_race', 'party_sex']
+        ,
         "victims": ['id', 'case_id', 'party_number', 'victim_degree_of_injury']
     }
 
