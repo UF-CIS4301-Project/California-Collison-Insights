@@ -1,20 +1,41 @@
 "use client";
 
-import Link from 'next/link';
-
+import Link from "next/link";
+import Router, { useRouter } from "next/navigation";
 
 export default function SideNav() {
+  const router = useRouter();
   return (
-    <aside id="sidebar" className="bg-white fixed top-0 left-0 w-32 h-screen">
-      <div className="flex flex-col justify-evenly h-full">
-        <div className="self-center text-3xl font-semibold whitespace-nowrap dark:text-white">
-          <Link href="/" className="hover:underline">Home</Link>
-        </div>
-        <div></div>
-        <div className="self-center text-3xl font-semibold whitespace-nowrap dark:text-white">
-          <a href="/queries" className="hover:underline">Queries</a>
-        </div>
-      </div>
-    </aside>
+    <div
+      id="screenHeight"
+      className="flex flex-col justify-evenly text-center bg-gray-300 w-[25vh]"
+    >
+      <button
+        className="flex items-center justify-center flex-grow p-10 w-full text-xl font-semibold hover:bg-gray-200"
+        onClick={() => {
+          router.push("/");
+        }}
+      >
+        Home
+      </button>
+      <hr className="border-t-2 border-gray-100" />
+      <button
+        className="flex items-center justify-center flex-grow p-10 w-full text-xl font-semibold hover:bg-gray-200"
+        onClick={() => {
+          router.push("/queries");
+        }}
+      >
+        Queries
+      </button>
+      <hr className="border-t-2 border-gray-100" />
+      <button
+        className="flex items-center justify-center flex-grow p-10 w-full text-xl font-semibold hover:bg-gray-200"
+        onClick={() => {
+          router.push("/queries");
+        }}
+      >
+        Datasets
+      </button>
+    </div>
   );
 }
