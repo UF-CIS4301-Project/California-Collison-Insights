@@ -4,59 +4,86 @@ from load_variables import *
 # Query 1 (At-fault Party Demographics and Fatality Rates)
 def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fault_race,
                          at_fault_gender):
-    select_clause = f"SELECT count(*)"
-    from_clause = f"FROM {party_table}"
-    join_clause = f"JOIN {victim_table} ON {party_table}.case_id = {victim_table}.case_id"
-    where_clause = "WHERE 1=1"
-    group_by_clause = "extract(year from {party_table}.collision_datetime)"
+
+    at_fault_where_clause = ""
+    time_range_where_clause = ""
 
     if year_start is not None:
-        where_clause += f" AND extract(year from {party_table}.collision_datetime) BETWEEN {year_start}"
+        time_range_where_clause += f" AND extract(year from {party_table}.collision_datetime) BETWEEN {year_start}"
     else:
-        where_clause += f" AND extract(year from {party_table}.collision_datetime) BETWEEN 2003"
+        time_range_where_clause += f" AND extract(year from {party_table}.collision_datetime) BETWEEN 2003"
     if year_end is not None:
-        where_clause += f" AND {year_end}"
+        time_range_where_clause += f" AND {year_end}"
     else:
-        where_clause += f" AND 2020"
+        time_range_where_clause += f" AND 2020"
 
     if month is not None:
-        where_clause += f" AND extract(month from {party_table}.collision_datetime) = '{month}"
+        time_range_where_clause += f" AND extract(month from {party_table}.collision_datetime) = '{month}"
+        group_by_clause = f" extract(month from {victim_table}.collision_datetime)"
+        time_range_select_clause = f" extract(month from {victim_table}.collision_datetime)"
+    else:
+        group_by_clause = f" extract(year from {victim_table}.collision_datetime)"
+        time_range_select_clause = f" extract(year from {victim_table}.collision_datetime)"
 
     match at_fault_age_range:
         case "":
             pass
         case "16-19":
-            where_clause += f" AND {party_table}.party_age BETWEEN 16 AND 19"
+            at_fault_where_clause += f" AND {party_table}.party_age BETWEEN 16 AND 19"
         case "20-34":
-            where_clause += f" AND {party_table}.party_age BETWEEN 20 AND 34"
+            at_fault_where_clause += f" AND {party_table}.party_age BETWEEN 20 AND 34"
         case "35-54":
-            where_clause += f" AND {party_table}.party_age BETWEEN 35 AND 54"
+            at_fault_where_clause += f" AND {party_table}.party_age BETWEEN 35 AND 54"
         case "55-64":
-            where_clause += f" AND {party_table}.party_age BETWEEN 55 AND 64"
+            at_fault_where_clause += f" AND {party_table}.party_age BETWEEN 55 AND 64"
         case "65plus":
-            where_clause += f" AND {party_table}.party_age >= 65"
+            at_fault_where_clause += f" AND {party_table}.party_age >= 65"
 
     match at_fault_race:
         case "":
             pass
         case "asian":
-            where_clause += f" AND {party_table}.party_race = 'asian'"
+            at_fault_where_clause += f" AND {party_table}.party_race = 'asian'"
         case "black":
-            where_clause += f" AND {party_table}.party_race = 'black'"
+            at_fault_where_clause += f" AND {party_table}.party_race = 'black'"
         case "hispanic":
-            where_clause += f" AND {party_table}.party_race = 'hispanic'"
+            at_fault_where_clause += f" AND {party_table}.party_race = 'hispanic'"
         case "other":
-            where_clause += f" AND {party_table}.party_race = 'other'"
+            at_fault_where_clause += f" AND {party_table}.party_race = 'other'"
         case "white":
-            where_clause += f" AND {party_table}.party_race = 'white'"
+            at_fault_where_clause += f" AND {party_table}.party_race = 'white'"
 
     match at_fault_gender:
         case "":
             pass
         case "male":
-            where_clause += f" AND {party_table}.party_sex = 'male'"
+            at_fault_where_clause += f" AND {party_table}.party_sex = 'male'"
         case "female":
-            where_clause += f" AND {party_table}.party_sex = 'female'"
+            at_fault_where_clause += f" AND {party_table}.party_sex = 'female'"
 
-    query = f"{select_clause} {from_clause} {join_clause} {where_clause}"
+    query = f"""
+    WITH at_fault AS (
+        SELECT
+            {party_table}.case_id AS at_fault_case_id
+        FROM
+            {party_table}
+        WHERE 1=1
+            {time_range_where_clause}
+            {at_fault_where_clause}
+    )
+    SELECT
+        {time_range_select_clause} AS time, 
+        ROUND(SUM(CASE WHEN {victim_table}.was_victim_killed = 1 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS fatality_percentage
+    FROM
+        at_fault af
+    JOIN 
+        {party_table} ON af.at_fault_case_id = {party_table}.case_id
+    JOIN 
+        {victim_table} ON af.at_fault_case_id = {victim_table}.case_id
+    WHERE 1=1 
+        {time_range_where_clause}
+    GROUP BY 
+        {group_by_clause}
+    """
+
     return query
