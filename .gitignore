@@ -1,12 +1,11 @@
-# IDE files to ignores
-.idea
-
-# server file to store
-.env
-# IDE files to ignore
-.idea
-
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# environmental variables
+.env
+
+# IDE files to ignore
+__pycache__
+.idea
 
 # dependencies
 /node_modules

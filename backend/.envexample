@@ -1,5 +1,10 @@
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
+DB_USERNAME=your_uf_username
+DB_PASSWORD=your_uf_oracle_password  # https://register.cise.ufl.edu/oracle/
 DB_HOST=oracle.cise.ufl.edu
 DB_PORT=1521
 DB_SERVICE_NAME_OR_SID=orcl
+
+DB_COLLISION_TABLE_USERNAME=uf_username
+DB_COUNTY_TABLE_USERNAME=uf_username
+DB_PARTY_TABLE_USERNAME=uf_username
+DB_VICTIM_TABLE_USERNAME=uf_username

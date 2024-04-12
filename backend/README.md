@@ -4,7 +4,7 @@
 - Option 1
   1. `pip install -r requirements.txt`
 - Option 2
-  1. `pip install cx_Oracle`
+  1. `pip install oracledb`
   2. `pip install python-dotenv`
   3. `pip install flask`
 
