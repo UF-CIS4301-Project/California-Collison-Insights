@@ -27,7 +27,7 @@ export default function RootLayout({
           <SideNav />
           <div
             id="screenHeight"
-            className="flex flex-col  text-xl pt-10 px-20 pb-20 overflow-y-auto"
+            className="flex flex-col flex-grow text-xl pt-10 px-20 pb-20 overflow-y-auto"
           >
             {children}
           </div>

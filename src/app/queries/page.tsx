@@ -1,6 +1,9 @@
-import Link from "next/link";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 function QueriesPage() {
+  const router = useRouter();
   const queries = [
     {
       key: "at-fault",
@@ -28,21 +31,22 @@ function QueriesPage() {
   ];
 
   return (
-    <main>
+    <main className="">
       <h1 className="font-bold text-3xl mb-2">Queries</h1>
       <div className="flex flex-row justify-center">
         {/* Boxes which link to each query */}
         <ul className="text-xl flex-col space-y-12 p-6">
           {queries.map((queryName) => (
             <li
-              className="text-2xl text-center bg-white hover:bg-black text-black font-semibold hover:text-white py-4 px-4 hover:border-transparent rounded shadow-lg"
+              className="group text-2xl text-center bg-white hover:bg-black text-black font-semibold hover:text-white py-4 px-4 hover:border-transparent rounded shadow-lg cursor-pointer"
               key={queryName.key}
+              onClick={() => {
+                router.push(`/queries/${queryName.key}`)
+              }}
             >
-              <Link href={`/queries/${queryName.key}`} key="" className="">
-                <span className="relative after:bg-white after:absolute after:h-1 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer">
-                  {queryName.value}
-                </span>
-              </Link>
+              <span className="relative after:bg-white after:absolute after:h-1 after:w-0 after:bottom-0 after:left-0 group-hover:after:w-full after:transition-all after:duration-300">
+                {queryName.value}
+              </span>
             </li>
           ))}
         </ul>

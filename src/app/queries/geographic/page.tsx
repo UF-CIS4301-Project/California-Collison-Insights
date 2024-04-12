@@ -117,13 +117,19 @@ export default function Geographic() {
               </div>
               {/* Range slider to select the year */}
               <input id="steps-range" type="range" min="2000" max="2020" defaultValue="2010" step="1" onChange={(e) => onValueChange(e.target.value)} className="w-full flex flex-row h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
-              {/* <div className="flex flex-row items-center text-lg">
-                <span className="pr-4 pl-20">By</span>
+            </div>
+          </div>
 
-                <Listbox value={selectedTime} onChange={setSelectedTime} className="py-4">
+          <div className="flex h-1/2 flex-row items-center w-full pt-4">
+
+            {/* Time of day dropdown menu */}
+            <div className="flex flex-row items-center text-lg w-1/2 justify-center">
+              <span className="pr-4">Time of day</span>
+              <div className="py-2"> {/* Wrapper Div */}
+                <Listbox value={selectedTimeOfDay} onChange={setTimeOfDay}>
                   <div className="">
-                    <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                      <span className="block truncate">{selectedTime.period}</span>
+                    <Listbox.Button className="relative w-80px cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                      <span className="block truncate">{selectedTimeOfDay.time}</span>
                       <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronUpDownIcon
                           className="h-5 w-5 text-gray-400"
@@ -137,8 +143,9 @@ export default function Geographic() {
                       leaveFrom="opacity-100"
                       leaveTo="opacity-0"
                     >
-                      <Listbox.Options className="absolute mt-1 max-h-60  overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm" >
-                        {timeOptions.map((time) => (
+                      <Listbox.Options className="absolute mt-1 max-h-60 w-100px overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                      style={{ top: '80%' }}>
+                        {timeOfDayOptions.map((time) => (
                           <Listbox.Option
                             className={({ active }) =>
                               `relative cursor-default seelct-none py-2 pl-4 pr-4 ${active ? 'bg-black text-white' : 'text-black'
@@ -153,7 +160,7 @@ export default function Geographic() {
                                   className={`block truncate ${selected ? 'font-medium' : 'font-normal'
                                     }`}
                                 >
-                                  {time.period}
+                                  {time.time}
                                 </span>
                                 {selected ? (
                                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
@@ -168,116 +175,64 @@ export default function Geographic() {
                     </Transition>
                   </div>
                 </Listbox>
-              </div> */}
-            </div>
-          </div>
-
-          <div className="flex h-1/2 flex-row items-center justify-around pt-4">
-
-            {/* Time of day dropdown menu */}
-            <div className="flex flex-row items-center text-lg">
-              <span className="pr-4">Time of day</span>
-              <Listbox value={selectedTimeOfDay} onChange={setTimeOfDay} className="py-2">
-                <div className="">
-                  <Listbox.Button className="relative w-80px cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <span className="block truncate">{selectedTimeOfDay.time}</span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Listbox.Button>
-                  <Transition
-                    as={Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options className="absolute mt-1 max-h-60 w-100px overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm" >
-                      {timeOfDayOptions.map((time) => (
-                        <Listbox.Option
-                          className={({ active }) =>
-                            `relative cursor-default seelct-none py-2 pl-4 pr-4 ${active ? 'bg-black text-white' : 'text-black'
-                            }`
-                          }
-                          key={time.id}
-                          value={time}
-                        >
-                          {({ selected }) => (
-                            <>
-                              <span
-                                className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                                  }`}
-                              >
-                                {time.time}
-                              </span>
-                              {selected ? (
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
-                                  <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </Listbox>
+              </div>
             </div>
 
             {/* Weather condition dropdown menu */}
-            <div className="flex flex-rows items-center text-lg">
+            <div className="flex flex-rows items-center text-lg w-1/2 justify-center">
               <span className="pr-4">Weather Conditions</span>
-              <Listbox value={selectedWeather} onChange={setWeather} className="py-2">
-                <div className="">
-                  <Listbox.Button className="relative w-80px cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <span className="block truncate">{selectedWeather.condition}</span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Listbox.Button>
-                  <Transition
-                    as={Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options className="absolute mt-1 max-h-60 w-100px overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm" >
-                      {weather.map((w) => (
-                        <Listbox.Option
-                          className={({ active }) =>
-                            `relative cursor-default seelct-none py-2 pl-4 pr-4 ${active ? 'bg-black text-white' : 'text-black'
-                            }`
-                          }
-                          key={w.id}
-                          value={w}
-                        >
-                          {({ selected }) => (
-                            <>
-                              <span
-                                className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                                  }`}
-                              >
-                                {w.condition}
-                              </span>
-                              {selected ? (
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
-                                  <CheckIcon className="h-5 w-5" aria-hidden="true" />
+              <div className="py-2 flex flex-col items-center">
+                <Listbox value={selectedWeather} onChange={setWeather}>
+                  <div className="">
+                    <Listbox.Button className="relative w-80px cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                      <span className="block truncate">{selectedWeather.condition}</span>
+                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                        <ChevronUpDownIcon
+                          className="h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </Listbox.Button>
+                    <Transition
+                      as={Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute mt-1 max-h-60 w-100px overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                      style={{ top: '80%'}}
+                      >
+                        {weather.map((w) => (
+                          <Listbox.Option
+                            className={({ active }) =>
+                              `relative cursor-default seelct-none py-2 pl-4 pr-4 ${active ? 'bg-black text-white' : 'text-black'
+                              }`
+                            }
+                            key={w.id}
+                            value={w}
+                          >
+                            {({ selected }) => (
+                              <>
+                                <span
+                                  className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                    }`}
+                                >
+                                  {w.condition}
                                 </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </Listbox>
+                                {selected ? (
+                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
+                                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </Listbox>
+              </div>
             </div>
 
           </div>

@@ -8,7 +8,7 @@ export default function SideNav() {
   return (
     <div
       id="screenHeight"
-      className="flex flex-col justify-evenly text-center bg-gray-300 w-[25vh]"
+      className="flex flex-col justify-evenly text-center bg-gray-300"
     >
       <button
         className="flex items-center justify-center flex-grow p-10 w-full text-xl font-semibold hover:bg-gray-200"
