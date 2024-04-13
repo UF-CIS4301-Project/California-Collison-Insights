@@ -1,10 +1,12 @@
-## Table of Contents
-1. [Backend Setup](#setup)
-2. [Query 1](#query1)
-3. [Query 2](#query2)
-4. [Query 3](#query3)
-5. [Query 4](#query4)
-6. [Query 5](#query5)
+## Table of Contents <a id="table-of-contents"></a>
+1. [Backend Setup](#setup) 
+2. API Documentation:
+   - [Metadata](#metadata)
+   - [Query 1](#query1)
+   - [Query 2](#query2)
+   - [Query 3](#query3)
+   - [Query 4](#query4)
+   - [Query 5](#query5)
 
 ## Backend setup instructions <a id="setup"></a>
 
@@ -25,8 +27,45 @@ Three options to start Flask Server (which hosts the API endpoints)
   2. If on a Windows, click the [start_flask.bat](start_flask.bat) batch file
   3. CD to `California-Collison-Insights\backend` in CLI and run `python flask_server.py`
 
+[Back to Table of Contents](#table-of-contents)
 
 ## Query API Documentation
+### Table Metadata: <a id="metadata"></a>
+Table Metadata API URL: 
+- `http://localhost:5000/api/metadata`
+
+Table Metadata GET request parameters:
+- None
+
+Example Table Metadata API response:
+```json
+[
+    {
+        "NUM_TUPLES": 6330628,
+        "TABLE_NAME": "collision"
+    },
+    {
+        "NUM_TUPLES": 1026,
+        "TABLE_NAME": "county"
+    },
+    {
+        "NUM_TUPLES": 457600,
+        "TABLE_NAME": "party"
+    },
+    {
+        "NUM_TUPLES": 4991159,
+        "TABLE_NAME": "victim"
+    },
+    {
+        "NUM_TUPLES": 11780413,
+        "TABLE_NAME": "total"
+    }
+]
+```
+
+[Back to Table of Contents](#table-of-contents)
+
+
 ### Query 1 (at-fault): <a id="query1"></a>
 Query 1 API URL: 
 - `http://localhost:5000/queries/at-fault`
@@ -75,6 +114,9 @@ Example Query 1 API response, filtering by month returns the same format:
     }
 ]
 ```
+[Back to Table of Contents](#table-of-contents)
+
+
 
 ### Query 2 (causes): <a id="query2"></a>
 Query 2 API URL: 
@@ -82,6 +124,7 @@ Query 2 API URL:
 
 Query 2 GET request parameters:
 
+[Back to Table of Contents](#table-of-contents)
 
 
 ### Query 3 (geographic): <a id="query3"></a>
@@ -132,6 +175,8 @@ Example Query 3 API response:
     }
 ]
 ```
+[Back to Table of Contents](#table-of-contents)
+
 
 ### Query 4 (vehicle type): <a id="query4"></a>
 Query 4 API URL: 
@@ -155,9 +200,43 @@ Query 4 GET request parameters:
   - `old` - 2008 to 2012
   - `very old` - older than 2008
 
+Example Query 4 API response:
+```json
+[
+    {
+        "FATALITY_PERCENTAGE": 0.51,
+        "YEAR": 2009
+    },
+    {
+        "FATALITY_PERCENTAGE": 0.52,
+        "YEAR": 2010
+    },
+    {
+        "FATALITY_PERCENTAGE": 0.47,
+        "YEAR": 2011
+    },
+    {
+        "FATALITY_PERCENTAGE": 0.47,
+        "YEAR": 2012
+    },
+    {
+        "FATALITY_PERCENTAGE": 0.59,
+        "YEAR": 2013
+    },
+    {
+        "FATALITY_PERCENTAGE": 0.54,
+        "YEAR": 2014
+    }
+]
+```
+[Back to Table of Contents](#table-of-contents)
+
 
 ### Query 5 (geographic): <a id="query3"></a>
 Query 5 API URL: 
 - `http://localhost:5000/queries/geographic`
 
 Query 5 GET request parameters:
+
+
+[Back to Table of Contents](#table-of-contents)

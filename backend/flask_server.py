@@ -9,6 +9,8 @@ from query3_geographic import fetch_query_geographic
 from query4_vehicle_type import fetch_query_vehicle_type
 from query5_road import fetch_query_road
 from query_custom import fetch_query_custom
+from query_metadata import fetch_metadata
+
 
 app = Flask(__name__)
 
@@ -41,6 +43,12 @@ def run_query(query):
     return jsonify(data)
 
 
+# API endpoint - metadata for tables
+@app.route('/api/metadata', methods=['GET'])
+def get_metadata():
+    return run_query(fetch_metadata())
+
+
 # API endpoint - Query 1 (At-fault Party Demographics and Fatality Rates)
 @app.route('/queries/at-fault', methods=['GET'])
 def get_query_at_fault():
@@ -63,8 +71,10 @@ def get_query_causes():
     year_start = request.args.get('year_start')
     year_end = request.args.get('year_end')
     month = request.args.get('month')
+    county = request.args.get('county')
+    accident_cause = request.args.get('accident_cause')
 
-    query = fetch_query_causes(year_start, year_end, month)
+    query = fetch_query_causes(year_start, year_end, month, county, accident_cause)
     return run_query(query)
 
 
