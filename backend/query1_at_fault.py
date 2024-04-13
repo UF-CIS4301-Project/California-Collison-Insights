@@ -6,7 +6,7 @@ def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fau
                          at_fault_gender):
 
     at_fault_where_clause = ""
-    time_range_where_clause = f" AND extract(year from {party_table}.collision_datetime) "
+    time_range_where_clause = f" AND EXTRACT(YEAR FROM {party_table}.collision_datetime) "
 
     if year_start is not None and year_end is not None:
         if year_start < year_end:
@@ -23,11 +23,11 @@ def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fau
         else:
             time_range_where_clause += f"BETWEEN 2003 AND 2020"
 
-    group_by_clause = f" extract(year from {victim_table}.collision_datetime)"
+    group_by_clause = f" EXTRACT(YEAR FROM {victim_table}.collision_datetime)"
 
     if month is not None:
-        time_range_where_clause += f" AND extract(month from {party_table}.collision_datetime) = '{month}'"
-        group_by_clause += f", extract(month from {victim_table}.collision_datetime)"
+        time_range_where_clause += f" AND EXTRACT(MONTH FROM {party_table}.collision_datetime) = '{month}'"
+        group_by_clause += f", EXTRACT(MONTH FROM {victim_table}.collision_datetime)"
 
     match at_fault_age_range:
         case "":
@@ -76,7 +76,7 @@ def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fau
             {at_fault_where_clause}
     )
     SELECT
-        extract(year from {victim_table}.collision_datetime) AS time, 
+        EXTRACT(YEAR FROM {victim_table}.collision_datetime) AS time, 
         ROUND(SUM(CASE WHEN {victim_table}.was_victim_killed = 1 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS fatality_percentage
     FROM
         at_fault af

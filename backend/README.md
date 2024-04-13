@@ -1,4 +1,12 @@
-## Backend setup instructions
+## Table of Contents
+1. [Backend Setup](#setup)
+2. [Query 1](#query1)
+3. [Query 2](#query2)
+4. [Query 3](#query3)
+5. [Query 4](#query4)
+6. [Query 5](#query5)
+
+## Backend setup instructions <a id="setup"></a>
 
 ### 1. Installing dependencies
 - Option 1
@@ -19,8 +27,7 @@ Three options to start Flask Server (which hosts the API endpoints)
 
 
 ## Query API Documentation
-### Query 1 (at-fault):
-
+### Query 1 (at-fault): <a id="query1"></a>
 Query 1 API URL: 
 - `http://localhost:5000/queries/at-fault`
 
@@ -29,7 +36,7 @@ Query 1 GET request parameters:
   - any year from `2003` to `2020`, does not have to be smaller than `year_end`
 - `year_end` - optional, the upper bound of the year filter
   - any year from `2003` to `2020`, does not have to be larger than `year_start`
-- `month` - optional, the specific month to filter by
+- `month` - optional, the month to filter by
   - any month in `MM` format from `01` to `12`
 - `age_range` - optional, the age ranges of the at-fault driver to filter results by, valid inputs are as follows:
   - `16-19`
@@ -65,5 +72,50 @@ Example Query 1 API response, filtering by month returns the same format:
     {
         "FATALITY_PERCENTAGE": 0.45,
         "TIME": 2012
-    },
-]`
+    }
+]
+```
+
+### Query 2 (causes): <a id="query2"></a>
+Query 2 API URL: 
+- `http://localhost:5000/queries/causes`
+
+Query 2 GET request parameters:
+
+
+
+### Query 3 (geographic): <a id="query3"></a>
+Query 3 API URL: 
+- `http://localhost:5000/queries/geographic`
+
+Query 3 GET request parameters:
+- `year` - optional, the year to filter by
+  - any year from `2003` to `2020`
+- `month` - optional, the month to filter by
+  - any month in `MM` format from `01` to `12`
+- `day_of_week` - optional, the day of the week to filter by
+  - any day from `1` to `7`
+  - `1` is Sunday, `2` is Monday, `7` is Saturday, etc.
+- `time_of_day` - optional, the time range of day
+  - `02:00-05:59`
+  - `06:00-09:59`
+  - `10:00-13:59`
+  - `14:00-17:59`
+  - `18:00-21:59`
+  - `22:00-01:59`
+- `county` - optional, the name of the county to filter by
+  - any of the names of the 57 counties in our database (CA has 58, but 1 is not in our source data)
+  - case insensitive
+
+
+### Query 4 (vehicle type): <a id="query4"></a>
+Query 4 API URL: 
+- `http://localhost:5000/queries/vehicle-type`
+
+Query 4 GET request parameters:
+
+### Query 5 (geographic): <a id="query3"></a>
+Query 5 API URL: 
+- `http://localhost:5000/queries/geographic`
+
+Query 5 GET request parameters:

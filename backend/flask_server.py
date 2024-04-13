@@ -59,51 +59,59 @@ def get_query_at_fault():
 # API endpoint - Query 2 (Possible Cause of Accident)
 @app.route('/queries/causes', methods=['GET'])
 def get_query_causes():
-    param1 = request.args.get('param1')
-    param2 = request.args.get('param2')
+    # parameters to filter query by
+    year_start = request.args.get('year_start')
+    year_end = request.args.get('year_end')
+    month = request.args.get('month')
 
-    data = fetch_query_causes()
-    return jsonify(data)
+    query = fetch_query_causes(year_start, year_end, month)
+    return run_query(query)
 
 
 # API endpoint - Query 3 (Geographic Analysis)
 @app.route('/queries/geographic', methods=['GET'])
 def get_query_geographic():
-    param1 = request.args.get('param1')
-    param2 = request.args.get('param2')
+    year = request.args.get('year')
+    month = request.args.get('month')
+    day_of_week = request.args.get('day_of_week')
+    time_of_day = request.args.get('time_of_day')
+    county = request.args.get('county')
 
-    data = fetch_query_geographic()
-    return jsonify(data)
+    query = fetch_query_geographic(year, month, day_of_week, time_of_day, county)
+    return run_query(query)
 
 
 # API endpoint - Query 4 (Effect of Vehicle Type and Age on Fatality Rates)
 @app.route('/queries/vehicle-type', methods=['GET'])
 def get_query_vehicle_type():
-    param1 = request.args.get('param1')
-    param2 = request.args.get('param2')
+    year_start = request.args.get('year_start')
+    year_end = request.args.get('year_end')
+    month = request.args.get('month')
 
-    data = fetch_query_vehicle_type()
-    return jsonify(data)
+    query = fetch_query_vehicle_type(year_start, year_end, month)
+    return run_query(query)
 
 
 # API endpoint - Query 5 (Effect of Road Conditions and Population Density on Traffic Collision Severity)
 @app.route('/queries/road', methods=['GET'])
 def get_query_road():
-    param1 = request.args.get('param1')
-    param2 = request.args.get('param2')
+    year_start = request.args.get('year_start')
+    year_end = request.args.get('year_end')
+    month = request.args.get('month')
 
-    data = fetch_query_road()
-    return jsonify(data)
+    query = fetch_query_road(year_start, year_end, month)
+    return run_query(query)
 
 
 # API endpoint - Custom Query
 @app.route('/queries/custom', methods=['GET'])
 def get_query_custom():
-    param1 = request.args.get('param1')
-    param2 = request.args.get('param2')
+    year_start = request.args.get('year_start')
+    year_end = request.args.get('year_end')
+    month = request.args.get('month')
 
-    data = fetch_query_custom()
-    return jsonify(data)
+    query = fetch_query_custom(year_start, year_end, month)
+    return run_query(query)
 
 
 if __name__ == '__main__':

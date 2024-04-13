@@ -4,7 +4,8 @@ DB_HOST=oracle.cise.ufl.edu
 DB_PORT=1521
 DB_SERVICE_NAME_OR_SID=orcl
 
-DB_COLLISION_TABLE_USERNAME=uf_username
-DB_COUNTY_TABLE_USERNAME=uf_username
-DB_PARTY_TABLE_USERNAME=uf_username
-DB_VICTIM_TABLE_USERNAME=uf_username
+# for these tables, provide the uf username's of the table owners
+DB_COLLISION_TABLE_USERNAME=table_owner_username
+DB_COUNTY_TABLE_USERNAME=table_owner_username
+DB_PARTY_TABLE_USERNAME=table_owner_username
+DB_VICTIM_TABLE_USERNAME=table_owner_username
