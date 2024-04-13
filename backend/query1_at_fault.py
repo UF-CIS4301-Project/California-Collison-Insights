@@ -5,7 +5,7 @@ from load_variables import *
 def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fault_race,
                          at_fault_gender):
 
-    at_fault_where_clause = ""
+    at_fault_where_clause = f" AND {party_table}.at_fault = 1"
     time_range_where_clause = f" AND EXTRACT(YEAR FROM {party_table}.collision_datetime) "
 
     if year_start is not None and year_end is not None:
@@ -19,9 +19,9 @@ def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fau
         if year_start is not None:
             time_range_where_clause += f"BETWEEN {year_start} AND 2020"
         elif year_end is not None:
-            time_range_where_clause += f"BETWEEN 2003 AND {year_end}"
+            time_range_where_clause += f"BETWEEN 2009 AND {year_end}"
         else:
-            time_range_where_clause += f"BETWEEN 2003 AND 2020"
+            time_range_where_clause += f"BETWEEN 2009 AND 2020"
 
     group_by_clause = f" EXTRACT(YEAR FROM {victim_table}.collision_datetime)"
 
@@ -71,20 +71,23 @@ def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fau
             {party_table}.case_id AS at_fault_case_id
         FROM
             {party_table}
-        WHERE 1=1
-            {time_range_where_clause}
+        WHERE 
+            1=1
             {at_fault_where_clause}
+            {time_range_where_clause}
+        
     )
     SELECT
         EXTRACT(YEAR FROM {victim_table}.collision_datetime) AS time, 
-        ROUND(SUM(CASE WHEN {victim_table}.was_victim_killed = 1 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS fatality_percentage
+        ROUND(AVG({victim_table}.was_victim_killed) * 100, 2) AS fatality_percentage
     FROM
         at_fault af
     JOIN 
         {party_table} ON af.at_fault_case_id = {party_table}.case_id
     JOIN 
         {victim_table} ON af.at_fault_case_id = {victim_table}.case_id
-    WHERE 1=1 
+    WHERE 
+        1=1 
         {time_range_where_clause}
     GROUP BY 
         {group_by_clause}

@@ -85,11 +85,11 @@ def main():
     database_file = "../input/california_traffic_collisions.sqlite"
 
     tables = {
-        "collisions": ['case_id', 'collision_severity', 'pcf_violation_category', 'county_location',
-                       'statewide_vehicle_type_at_fault', 'weather_1', 'weather_2', 'road_surface', 'road_condition_1',
-                       'road_condition_2', 'lighting']
+        "collisions": ['case_id', 'collision_severity', 'pcf_violation_category', 'county_location', 'weather_1',
+                       'weather_2', 'road_surface', 'road_condition_1', 'road_condition_2', 'lighting']
         ,
-        "parties": ['id', 'case_id', 'party_number', 'at_fault', 'vehicle_year', 'party_age', 'party_race', 'party_sex']
+        "parties": ['id', 'case_id', 'party_number', 'at_fault', 'vehicle_year', 'statewide_vehicle_type', 'party_age',
+                    'party_race', 'party_sex']
         ,
         "victims": ['id', 'case_id', 'party_number', 'victim_degree_of_injury']
     }

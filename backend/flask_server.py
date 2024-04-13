@@ -87,8 +87,10 @@ def get_query_vehicle_type():
     year_start = request.args.get('year_start')
     year_end = request.args.get('year_end')
     month = request.args.get('month')
+    vehicle_type = request.args.get('vehicle_type')
+    vehicle_age = request.args.get('vehicle_age')
 
-    query = fetch_query_vehicle_type(year_start, year_end, month)
+    query = fetch_query_vehicle_type(year_start, year_end, month, vehicle_type, vehicle_age)
     return run_query(query)
 
 

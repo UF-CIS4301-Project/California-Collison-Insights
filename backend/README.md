@@ -33,9 +33,9 @@ Query 1 API URL:
 
 Query 1 GET request parameters:
 - `year_start` - optional, the lower bound of the year filter
-  - any year from `2003` to `2020`, does not have to be smaller than `year_end`
+  - any year from `2009` to `2020`, does not have to be smaller than `year_end`
 - `year_end` - optional, the upper bound of the year filter
-  - any year from `2003` to `2020`, does not have to be larger than `year_start`
+  - any year from `2009` to `2020`, does not have to be larger than `year_start`
 - `month` - optional, the month to filter by
   - any month in `MM` format from `01` to `12`
 - `age_range` - optional, the age ranges of the at-fault driver to filter results by, valid inputs are as follows:
@@ -90,7 +90,7 @@ Query 3 API URL:
 
 Query 3 GET request parameters:
 - `year` - optional, the year to filter by
-  - any year from `2003` to `2020`
+  - any year from `2009` to `2020`
 - `month` - optional, the month to filter by
   - any month in `MM` format from `01` to `12`
 - `day_of_week` - optional, the day of the week to filter by
@@ -105,7 +105,7 @@ Query 3 GET request parameters:
   - `22:00-01:59`
 - `county` - optional, the name of the county to filter by
   - any of the names of the 57 counties in our database (California has 58 counties, but 1 county is not in our traffic collision data)
-  - name is case insensitive
+  - name is case-insensitive
 
 Example Query 3 API response:
 ```json
@@ -138,6 +138,23 @@ Query 4 API URL:
 - `http://localhost:5000/queries/vehicle-type`
 
 Query 4 GET request parameters:
+- `year_start` - optional, the lower bound of the year filter
+  - any year from `2009` to `2020`, does not have to be smaller than `year_end`
+- `year_end` - optional, the upper bound of the year filter
+  - any year from `2009` to `2020`, does not have to be larger than `year_start`
+- `month` - optional, the month to filter by
+  - any month in `MM` format from `01` to `12`
+- `vehicle_type` - optional, vehicle type to filter by
+  - `motorcycle/moped/scooter`
+  - `passenger car`
+  - `pickup truck`
+  - `large vehicles`
+- `vehicle_age` - optional vehicle age range to filter by
+  - `new` - 2017 to 2020
+  - `middle` - 2013 to 2016
+  - `old` - 2008 to 2012
+  - `very old` - older than 2008
+
 
 ### Query 5 (geographic): <a id="query3"></a>
 Query 5 API URL: 

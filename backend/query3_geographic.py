@@ -1,6 +1,7 @@
 from load_variables import *
 
 
+# Query 3 (Geographic Analysis )
 def fetch_query_geographic(year, month, day_of_week, time_of_day, county):
     where_clause = ""
     if year is not None:
@@ -55,7 +56,8 @@ def fetch_query_geographic(year, month, day_of_week, time_of_day, county):
             {collision_table} 
         JOIN 
             {county_table} ON UPPER({collision_table}.county_location) = UPPER({county_table}.name)
-        WHERE 1=1 
+        WHERE 
+            1=1 
             {where_clause} 
         GROUP BY
             {collision_table}.county_location,
