@@ -104,9 +104,34 @@ Query 3 GET request parameters:
   - `18:00-21:59`
   - `22:00-01:59`
 - `county` - optional, the name of the county to filter by
-  - any of the names of the 57 counties in our database (CA has 58, but 1 is not in our source data)
-  - case insensitive
+  - any of the names of the 57 counties in our database (California has 58 counties, but 1 county is not in our traffic collision data)
+  - name is case insensitive
 
+Example Query 3 API response:
+```json
+[
+    {
+        "ACCIDENT_PERCENTAGE": 0.8,
+        "COUNTY": "alameda",
+        "YEAR": 2020
+    },
+    {
+        "ACCIDENT_PERCENTAGE": 4.65,
+        "COUNTY": "alpine",
+        "YEAR": 2020
+    },
+    {
+        "ACCIDENT_PERCENTAGE": 1.12,
+        "COUNTY": "amador",
+        "YEAR": 2020
+    },
+    {
+        "ACCIDENT_PERCENTAGE": 0.68,
+        "COUNTY": "butte",
+        "YEAR": 2020
+    }
+]
+```
 
 ### Query 4 (vehicle type): <a id="query4"></a>
 Query 4 API URL: 
