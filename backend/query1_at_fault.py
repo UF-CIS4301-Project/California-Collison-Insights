@@ -2,8 +2,7 @@ from load_variables import *
 
 
 # Query 1 (At-fault Party Demographics and Fatality Rates)
-def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fault_race,
-                         at_fault_gender):
+def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fault_race, at_fault_gender):
 
     at_fault_where_clause = f" AND {party_table}.at_fault = 1"
     time_range_where_clause = f" AND EXTRACT(YEAR FROM {party_table}.collision_datetime) "

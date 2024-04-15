@@ -1,6 +1,7 @@
 from load_variables import *
 
 
+# Query 5 (Effect of Road Conditions and Population Density on Traffic Collision Severity)
 def fetch_query_road(year_start, year_end, month, county, road_condition, lighting_condition):
     where_clause = ""
 

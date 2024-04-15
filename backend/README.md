@@ -106,7 +106,7 @@ Query 1 GET request parameters:
     ]
   ```
 
-Example Query 1 API response, filtering by month returns the same format:
+Example Query 1 API response, filtering by `month` returns the same format:
 ```json
   [
       {
@@ -136,6 +136,51 @@ Query 2 API URL:
 - `http://localhost:5000/queries/causes`
 
 Query 2 GET request parameters:
+- `year_start` - optional, the lower bound of the year filter
+  - any year from `2009` to `2020`, does not have to be smaller than `year_end`
+- `year_end` - optional, the upper bound of the year filter
+  - any year from `2009` to `2020`, does not have to be larger than `year_start`
+- `month` - optional, the month to filter by
+  - any month in `MM` format from `01` to `12`
+- `county` - optional, the name of the county to filter by
+  - any of the names of the [counties](#countyname) in our database
+  - name is case-insensitive
+- `accident_cause` - optional, filters query by cause of accident
+  ```json
+  [
+      "common traffic violations",
+      "driving while impaired",
+      "failure to give right of way",
+      "fault of pedestrian",
+      "mechanical issues"
+  ]
+  ```
+
+Example Query 2 API response, filtering by `county` returns the same format:
+  ```json
+  [
+      {
+          "ACCIDENTS_PER_1000_CAP": 8.84,
+          "BUDGET_PER_CAP": 1566.73,
+          "YEAR": 2009
+      },
+      {
+          "ACCIDENTS_PER_1000_CAP": 8.83,
+          "BUDGET_PER_CAP": 1528.29,
+          "YEAR": 2010
+      },
+      {
+          "ACCIDENTS_PER_1000_CAP": 8.59,
+          "BUDGET_PER_CAP": 1537.29,
+          "YEAR": 2011
+      },
+      {
+          "ACCIDENTS_PER_1000_CAP": 8.31,
+          "BUDGET_PER_CAP": 1530.39,
+          "YEAR": 2012
+      }
+  ]
+  ```
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -166,6 +211,7 @@ Query 3 GET request parameters:
 - `county` - optional, the name of the county to filter by
   - any of the names of the [counties](#countyname) in our database
   - name is case-insensitive
+
 Example Query 3 API response:
 ```json
   [

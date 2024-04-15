@@ -1,7 +1,7 @@
 from load_variables import *
 
 
-# Query 3 (Geographic Analysis )
+# Query 3 (Geographic Analysis)
 def fetch_query_geographic(year, month, day_of_week, time_of_day, county):
     where_clause = ""
     if year is not None:
