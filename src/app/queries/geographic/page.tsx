@@ -36,9 +36,12 @@ export default function Geographic() {
     { id: 5, condition: 'Misty' }
   ]
 
-  let currYear: number = 2010
-  let currCounty: string = ""
+  let currYear: number = 2010;
+  let currCounty: string = "Solano County";
+  let accident_percentage_num = 1.0;
+  let accident_percentage_str = accident_percentage_num.toFixed(2);
   const [year, setYear] = useState(currYear)
+  const [percentage, setPercentage] = useState(accident_percentage_str);
 
   const [selectedTime, setSelectedTime] = useState(timeOptions[0])
   const [selectedTimeOfDay, setTimeOfDay] = useState(timeOfDayOptions[0])
@@ -51,7 +54,7 @@ export default function Geographic() {
   }
 
   return (
-    <div>
+    <div className="">
       <span className="text-4xl">Geographic</span>
 
       <div id="map and input window" className="flex flex-col items-center h-[85vh]">
@@ -97,11 +100,9 @@ export default function Geographic() {
           </div>
           {/* County information box */}
 
-          <Card style={{ width: '24rem' }} className="flex flex-col h-[20vh] outline-2 shadow-md hover:shadow-lg p-2 bg-white rounded-md  text-lg font-bold">
-            <Card.Title>County: {selectedCounty}</Card.Title>
-            <Card.Subtitle>Generic Attribute: Generic Value</Card.Subtitle>
-            <Card.Subtitle>Generic Attribute: Generic Value</Card.Subtitle>
-            <Card.Subtitle>Generic Attribute: Generic Value</Card.Subtitle>
+          <Card style={{ width: '24rem' }} className="flex flex-col h-[10vh] outline-2 shadow-md hover:shadow-lg p-2 bg-white rounded-md  text-lg font-bold">
+            <Card.Title className="pb-4">County: {selectedCounty}</Card.Title>
+            <Card.Subtitle>Accident Percentage: {accident_percentage_str}</Card.Subtitle>
           </Card>
         </div>
         <div className="py-6"></div>
@@ -123,7 +124,7 @@ export default function Geographic() {
           <div className="flex h-1/2 flex-row items-center w-full pt-4">
 
             {/* Time of day dropdown menu */}
-            <div className="flex flex-row items-center text-lg w-1/2 justify-center">
+            <div className="flex flex-row items-center text-lg w-1/3 justify-center">
               <span className="pr-4">Time of day</span>
               <div className="py-2"> {/* Wrapper Div */}
                 <Listbox value={selectedTimeOfDay} onChange={setTimeOfDay}>
@@ -144,7 +145,7 @@ export default function Geographic() {
                       leaveTo="opacity-0"
                     >
                       <Listbox.Options className="absolute mt-1 max-h-60 w-100px overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
-                      style={{ top: '80%' }}>
+                        style={{ top: '80%' }}>
                         {timeOfDayOptions.map((time) => (
                           <Listbox.Option
                             className={({ active }) =>
@@ -179,7 +180,7 @@ export default function Geographic() {
             </div>
 
             {/* Weather condition dropdown menu */}
-            <div className="flex flex-rows items-center text-lg w-1/2 justify-center">
+            <div className="flex flex-rows items-center text-lg w-1/3 justify-center">
               <span className="pr-4">Weather Conditions</span>
               <div className="py-2 flex flex-col items-center">
                 <Listbox value={selectedWeather} onChange={setWeather}>
@@ -200,7 +201,7 @@ export default function Geographic() {
                       leaveTo="opacity-0"
                     >
                       <Listbox.Options className="absolute mt-1 max-h-60 w-100px overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
-                      style={{ top: '80%'}}
+                        style={{ top: '80%' }}
                       >
                         {weather.map((w) => (
                           <Listbox.Option
@@ -235,6 +236,11 @@ export default function Geographic() {
               </div>
             </div>
 
+            <div id="search-button" className="flex w-1/3 flex-row justify-center">
+              <button className="flex bg-white shadow-lg hover:bg-black hover:text-bold text-gray-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded">
+                Enter Query
+              </button>
+            </div>
           </div>
         </div>
 

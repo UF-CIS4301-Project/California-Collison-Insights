@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 import oracledb
 
 from load_variables import *
@@ -13,6 +14,8 @@ from query_metadata import fetch_metadata
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Access-Control-Allow-Origin'
 
 
 # Create database connection pool

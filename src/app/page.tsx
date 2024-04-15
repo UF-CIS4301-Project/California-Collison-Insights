@@ -13,6 +13,7 @@ import {
 import WelcomeBar from "./components/ui/welcome-bar";
 import DataSetButton from "./components/ui/DataSetButton";
 import SideNav from "./components/ui/sidenav";
+import axios from 'axios';
 
 function IndexPage() {
   const datasets = [
@@ -38,8 +39,23 @@ function IndexPage() {
         consectetur adipisicing elit.
         <br />
         <br />
-        Click <button className="">here</button> for total number of tuples in
-        database: {selectedTuples}
+        Click
+        <button className="cursor hover:uppercase"
+        onClick={() => {
+          console.log("FETCHING")
+          axios.get('http://localhost:5000/api/metadata')
+            .then(response=> {
+              setSelectedTuples(response.data[4]["NUM_TUPLES"]);
+              console.log(response.data)
+            })
+            .catch(error => {
+              console.error(error);
+            })
+        }} >
+          &nbsp;here&nbsp;
+          </button>
+           for total number of tuples in
+        database: {selectedTuples.toLocaleString()}
       </div>
       <div className="text-center my-10 text-3xl">
         Feel free to explore the datasets we used
@@ -47,7 +63,7 @@ function IndexPage() {
       {/* Box components which describe and link to each of our datasets - currently just holds dummy data/text  */}
       <div className="flex flex-rows justify-evenly">
         {datasets.map((set) => (
-          <Link href="">
+          <Link href="" key={set.key}>
             <DataSetButton
               title="The Coldest Sunset"
               body="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, et sint nulla beatae non eveniet accusantium ratione velit corrupti labore odio "

@@ -5,6 +5,8 @@ import { Line } from 'react-chartjs-2';
 import { registerables, Chart } from 'chart.js';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import axios from 'axios';
+import { listbox } from "@nextui-org/react";
 
 
 export default function Home() {
@@ -49,8 +51,7 @@ export default function Home() {
     height: 500 // Height of the chart
   };
 
-  // Graph data - currently holds dummy data
-  const [data, setData] = useState({
+  const dummyData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
       {
@@ -67,24 +68,33 @@ export default function Home() {
         borderColor: '#742774',
       },
     ],
-  })
+  }
+
+  // Graph data - currently holds dummy data
+  const [selectedData, setData] = useState(dummyData)
 
   const updateDataset = () => {
-    const newData = data.datasets[0].data.map(value => value + Math.floor(Math.random() * 10))
-    const newData2 = data.datasets[1].data.map(value => value + Math.floor(Math.random() * 10))
-    setData({
-      ...data,
-      datasets: [
-        {
-          ...data.datasets[0],
-          data: newData
-        },
-        {
-          ...data.datasets[1],
-          data: newData2
-        }
-      ]
-    })
+    axios.get('http://localhost:5000/queries/at-fault')
+      .then(response => {
+        var new_labels = response.data.map((a) => { return a['TIME'] })
+        var new_data_points = response.data.map((b) => { return b['FATALITY_PERCENTAGE'] })
+        setData({
+          labels: new_labels,
+          datasets: [
+            {
+              label: 'At-Fault Percentages',
+              data: new_data_points,
+              fill: true,
+              backgroundColor: 'rgba(75,192,192,0.2)',
+              borderColor: 'rgba(75,192,192,1)',
+            },
+          ]
+        })
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
   }
 
   return (
@@ -94,7 +104,7 @@ export default function Home() {
       {/* Graph component - currently just two lines with dummy data */}
       <div className="flex flex-row justify-center">
         <div className="flex flex-row justify-center" style={{ width: '80%', height: '60vh' }}>
-          <Line data={data} options={options} className="bg-white" />
+          <Line data={selectedData} options={options} className="bg-white" />
         </div>
       </div>
 
@@ -275,7 +285,7 @@ export default function Home() {
         </div>
 
         <div id="search-button" className="flex w-1/4 flex-row justify-center">
-          <button className="flex bg-white shadow-lg hover:bg-black hover:text-bold text-gray-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded" onClick={updateDataset}>
+          <button className="flex bg-white shadow-lg hover:bg-black hover:text-bold text-gray-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded" onClick={function (event) { updateDataset() }}>
             Enter Query
           </button>
         </div>
