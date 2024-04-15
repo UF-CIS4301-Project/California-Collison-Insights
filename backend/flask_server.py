@@ -113,8 +113,11 @@ def get_query_road():
     year_start = request.args.get('year_start')
     year_end = request.args.get('year_end')
     month = request.args.get('month')
+    county = request.args.get('county')
+    road_condition = request.args.get('road_condition')
+    lighting_condition = request.args.get('lighting_condition')
 
-    query = fetch_query_road(year_start, year_end, month)
+    query = fetch_query_road(year_start, year_end, month, county, road_condition, lighting_condition)
     return run_query(query)
 
 

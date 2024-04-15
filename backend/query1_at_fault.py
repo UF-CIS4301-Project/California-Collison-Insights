@@ -43,27 +43,11 @@ def fetch_query_at_fault(year_start, year_end, month, at_fault_age_range, at_fau
         case "65plus":
             at_fault_where_clause += f" AND {party_table}.party_age >= 65"
 
-    match at_fault_race:
-        case "":
-            pass
-        case "asian":
-            at_fault_where_clause += f" AND {party_table}.party_race = 'asian'"
-        case "black":
-            at_fault_where_clause += f" AND {party_table}.party_race = 'black'"
-        case "hispanic":
-            at_fault_where_clause += f" AND {party_table}.party_race = 'hispanic'"
-        case "other":
-            at_fault_where_clause += f" AND {party_table}.party_race = 'other'"
-        case "white":
-            at_fault_where_clause += f" AND {party_table}.party_race = 'white'"
+    if at_fault_race is not None:
+        at_fault_where_clause += f" AND {party_table}.party_race = '{at_fault_race}'"
 
-    match at_fault_gender:
-        case "":
-            pass
-        case "male":
-            at_fault_where_clause += f" AND {party_table}.party_sex = 'male'"
-        case "female":
-            at_fault_where_clause += f" AND {party_table}.party_sex = 'female'"
+    if at_fault_gender is not None:
+        at_fault_where_clause += f" AND {party_table}.party_sex = '{at_fault_gender}'"
 
     query = f"""
     WITH at_fault AS (
