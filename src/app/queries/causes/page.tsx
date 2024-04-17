@@ -47,7 +47,27 @@ export default function CausesVsBudgets() {
     maintainAspectRatio: false, // Set to false to allow custom size
     responsive: true,
     width: 900, // Width of the chart
-    height: 500 // Height of the chart
+    height: 500, // Height of the chart
+    "left-y-axis": {
+      type: "linear",
+      position: "left",
+      grid: {
+        display: false
+      },
+      // ticks: {
+      //   maxTicksLimit: 6
+      // }
+    },
+    "right-y-axis": {
+      type: "linear",
+      position: "right",
+      grid: {
+        display: false
+      },
+      // ticks: {
+      //   maxTicksLimit: 6
+      // }
+    }
   };
 
   // Graph data - currently holds dummy data
@@ -55,6 +75,7 @@ export default function CausesVsBudgets() {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
       {
+        yAxisID: "left-y-axis",
         label: 'First dataset',
         data: [33, 53, 85, 41, 44, 65],
         fill: true,
@@ -62,6 +83,7 @@ export default function CausesVsBudgets() {
         borderColor: 'rgba(75,192,192,1)',
       },
       {
+        yAxisID: "left-y-axis",
         label: 'Second dataset',
         data: [33, 25, 35, 51, 54, 76],
         fill: false,
@@ -77,18 +99,27 @@ export default function CausesVsBudgets() {
     axios.get('http://localhost:5000/queries/causes')
       .then(response => {
         console.log(response.data);
-        var new_labels = response.data.map((a) => { return a['TIME'] });
-        var new_data_points = response.data.map((b) => { return b['FATALITY_PERCENTAGE'] });
+        var new_labels = response.data.map((a) => { return a['YEAR'] });
+        var new_data_points_1 = response.data.map((b) => { return b['ACCIDENTS_PER_1000_CAP'] });
+        var new_data_points_2 = response.data.map((b) => { return b['BUDGET_PER_CAP'] });
         setData({
           labels: new_labels,
           datasets: [
             {
-              label: 'Cause Data',
-              data: new_data_points,
+              yAxisID: "left-y-axis",
+              label: 'Accidents per 1000 Capita',
+              data: new_data_points_1,
               fill: true,
               backgroundColor: 'rgba(75,192,192,0.2)',
               borderColor: 'rgba(75,192,192,1)',
             },
+            {
+              yAxisID: "right-y-axis",
+              label: 'Budget Per Capita',
+              data: new_data_points_2,
+              fill: false,
+              borderColor: '#742774',
+            }
           ]
         })
       })

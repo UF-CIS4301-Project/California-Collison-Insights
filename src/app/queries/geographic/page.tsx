@@ -11,8 +11,12 @@ import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import Card from 'react-bootstrap/Card';
 import { Slider } from "@nextui-org/react";
+import axios from 'axios';
 
 import caMap from './data/caCountiesTopo.json';
+import { scaleLinear } from "d3-scale";
+
+
 
 export default function Geographic() {
   const timeOptions = [
@@ -36,21 +40,66 @@ export default function Geographic() {
     { id: 5, condition: 'Misty' }
   ]
 
+  let maxPerc: number = -1.00;
   let currYear: number = 2010;
   let currCounty: string = "Solano County";
   let accident_percentage_num = 1.0;
   let accident_percentage_str = accident_percentage_num.toFixed(2);
+  let county_percentage_map = caMap.objects.subunits.geometries.reduce((accumulator, currentGeometry) => {
+    const countyName = currentGeometry.properties['name'].toLowerCase();
+    accumulator[countyName] = "1.00";
+    return accumulator;
+  }, {} as { [key: string]: string });
+  const [loaded, setLoaded] = useState(false);
+
+
   const [year, setYear] = useState(currYear)
   const [percentage, setPercentage] = useState(accident_percentage_str);
-
+  const [currentMapData, setMapData] = useState(county_percentage_map);
   const [selectedTime, setSelectedTime] = useState(timeOptions[0])
   const [selectedTimeOfDay, setTimeOfDay] = useState(timeOfDayOptions[0])
   const [selectedWeather, setWeather] = useState(weather[0])
-  const [selectedCounty, setCounty] = useState(currCounty)
+  const [selectedCounty, setCounty] = useState(currCounty);
+  const [currMaxPerc, setMaxPerc] = useState(maxPerc);
 
   const onValueChange = (newYear) => {
     setYear(newYear)
-    console.log(newYear)
+  }
+
+  const colorScale = scaleLinear().domain([0, currMaxPerc]).range(['#ddd', "#06F"]);
+
+  const updateDataset = () => {
+    try {
+    axios.get('http://localhost:5000/queries/geographic')
+      .then(response => {
+        const new_data = response.data.reduce((accumulator, currentValue) => {
+          accumulator[currentValue['COUNTY']] = currentValue['ACCIDENT_PERCENTAGE'];
+          return accumulator;
+        }, {} as { [key: string]: string });
+
+        setMapData(new_data);
+
+        let maxPercentageValue = -Infinity;
+
+        Object.entries<string>(new_data).forEach((value: [string, string]) => {
+          const [county, per] = value;
+          const percentageNumber = parseFloat(per);
+
+          if (percentageNumber > maxPercentageValue) {
+            maxPercentageValue = percentageNumber;
+          }
+        });
+
+        setMaxPerc(maxPercentageValue);
+        setLoaded(true);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    }
+    catch (e:any){
+      console.log(e);
+    }
   }
 
   return (
@@ -80,6 +129,8 @@ export default function Geographic() {
                         key={geo.rsmKey}
                         geography={geo}
                         stroke="#FFFFFF"
+                        // {loading ? <>Loading...</> : <>{selectedTuples.toLocaleString()}</>}
+                        fill={loaded ? `${colorScale(currentMapData[geo.properties.name.toLowerCase()])}` : 'rgb(0,0,0)'}
                         style={{
                           hover: {
                             fill: "#F53"
@@ -88,6 +139,8 @@ export default function Geographic() {
                         }}
                         onMouseEnter={() => {
                           setCounty(`${geo.properties.fullName}`);
+                          setPercentage(currentMapData[geo.properties.name.toLowerCase()])
+
                         }}
 
 
@@ -102,7 +155,7 @@ export default function Geographic() {
 
           <Card style={{ width: '24rem' }} className="flex flex-col h-[10vh] outline-2 shadow-md hover:shadow-lg p-2 bg-white rounded-md  text-lg font-bold">
             <Card.Title className="pb-4">County: {selectedCounty}</Card.Title>
-            <Card.Subtitle>Accident Percentage: {accident_percentage_str}</Card.Subtitle>
+            <Card.Subtitle>Accident Percentage: {percentage}</Card.Subtitle>
           </Card>
         </div>
         <div className="py-6"></div>
@@ -237,7 +290,8 @@ export default function Geographic() {
             </div>
 
             <div id="search-button" className="flex w-1/3 flex-row justify-center">
-              <button className="flex bg-white shadow-lg hover:bg-black hover:text-bold text-gray-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded">
+              <button className="flex bg-white shadow-lg hover:bg-black hover:text-bold text-gray-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded"
+              onClick={updateDataset}>
                 Enter Query
               </button>
             </div>

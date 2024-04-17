@@ -25,6 +25,7 @@ function IndexPage() {
 
   let numTuples: number = 0;
   const [selectedTuples, setSelectedTuples] = useState(numTuples);
+  const [loading, setLoading] = useState(false);
 
   return (
     <main>
@@ -41,21 +42,23 @@ function IndexPage() {
         <br />
         Click
         <button className="cursor hover:uppercase"
-        onClick={() => {
-          console.log("FETCHING")
-          axios.get('http://localhost:5000/api/metadata')
-            .then(response=> {
-              setSelectedTuples(response.data[4]["NUM_TUPLES"]);
-              console.log(response.data)
-            })
-            .catch(error => {
-              console.error(error);
-            })
-        }} >
+          onClick={() => {
+            setLoading(true);
+            axios.get('http://localhost:5000/api/metadata')
+              .then(response => {
+                setSelectedTuples(response.data[4]["NUM_TUPLES"]);
+                setLoading(false);
+              })
+              .catch(error => {
+                setLoading(false);
+                console.error(error);
+              })
+
+          }} >
           &nbsp;here&nbsp;
-          </button>
-           for total number of tuples in
-        database: {selectedTuples.toLocaleString()}
+        </button>
+        for total number of tuples in
+        database: {loading ? <>Loading...</> : <>{selectedTuples.toLocaleString()}</>}
       </div>
       <div className="text-center my-10 text-3xl">
         Feel free to explore the datasets we used

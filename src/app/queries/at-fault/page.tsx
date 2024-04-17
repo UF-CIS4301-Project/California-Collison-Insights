@@ -6,6 +6,7 @@ import { registerables, Chart } from 'chart.js';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import axios from 'axios';
+import { ChangeEventHandler } from 'react';
 import { listbox } from "@nextui-org/react";
 
 
@@ -18,31 +19,40 @@ export default function Home() {
     { id: 2, period: 'Month' }
   ]
 
-  const ageComparison = [
-    { id: 1, operator: 'less than' },
-    { id: 2, operator: 'less than or equal to' },
-    { id: 3, operator: 'greater than' },
-    { id: 4, operator: 'greater than or equal to' },
-    { id: 5, operator: 'equal to' },
-    { id: 6, operator: 'not equal' }
+  const ageRanges = [
+    { id: 1, range: '16-19' },
+    { id: 2, range: '20-34' },
+    { id: 3, range: '35-54' },
+    { id: 4, range: '55-64' },
+    { id: 5, range: '65plus' },
+    { id: 6, range: 'all'}
   ]
 
   const raceOptions = [
-    { id: 1, race: "White" },
-    { id: 2, race: "Black" },
-    { id: 3, race: "Asian" },
-    { id: 4, race: "Latino" },
+    { id: 1, race: "asian" },
+    { id: 2, race: "black" },
+    { id: 3, race: "hispanic" },
+    { id: 4, race: "other" },
+    { id: 5, race: "white" },
+    { id: 6, race: "all"}
   ]
 
   const genderOptions = [
     { id: 1, gender: "Male" },
-    { id: 2, gender: "Female" }
+    { id: 2, gender: "Female" },
+    { id: 3, gender: "Both"}
   ]
 
+  const yearBegin: number = 2009;
+  const yearEnd: number = 2020;
+  const defaultMonth: number = 1;
   const [selectedTime, setSelectedTime] = useState(timeOptions[0])
-  const [selectedAgeComparison, setAgeComparison] = useState(ageComparison[0])
+  const [selectedAgeRange, setAgeRanges] = useState(ageRanges[0])
   const [selectedRace, setRace] = useState(raceOptions[0])
   const [selectedGender, setGender] = useState(genderOptions[0])
+  const [currYearBegin, setYearBegin] = useState(yearBegin);
+  const [currYearEnd, setYearEnd] = useState(yearEnd);
+  const [currMonthFilter, setMonthFilter] = useState(defaultMonth);
 
   const options = {
     maintainAspectRatio: false, // Set to false to allow custom size
@@ -74,10 +84,20 @@ export default function Home() {
   const [selectedData, setData] = useState(dummyData)
 
   const updateDataset = () => {
-    axios.get('http://localhost:5000/queries/at-fault')
+    let yStart = `year_start=${currYearBegin}`;
+    let yEnd = `year_end=${currYearEnd}`;
+    let aRange = selectedAgeRange.range == 'all' ? '' : `&age_range=${selectedAgeRange.range}`;
+    let genderFilter = selectedGender.gender == 'Both' ? '' : `&gender=${selectedGender.gender.toLocaleLowerCase()}`;
+    let raceFilter = selectedRace.race == 'all' ? '' : `&race=${selectedRace.race}`;
+    let monthFilter = selectedTime.period == 'Year' ? '' : `&month=${String(currMonthFilter).padStart(2, '0')}`
+    let queryString: string = `?${yStart}&${yEnd}${aRange}${genderFilter}${raceFilter}${monthFilter}`
+    let requestUrl: string = `http://localhost:5000/queries/at-fault${queryString}`
+    axios.get(requestUrl)
       .then(response => {
         var new_labels = response.data.map((a) => { return a['TIME'] })
         var new_data_points = response.data.map((b) => { return b['FATALITY_PERCENTAGE'] })
+        console.log(requestUrl);
+        console.log(response.data)
         setData({
           labels: new_labels,
           datasets: [
@@ -97,6 +117,43 @@ export default function Home() {
 
   }
 
+  const handleStartYearChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+    if (!newValue)
+      setYearBegin(yearBegin)
+    else
+      setYearBegin(newValue);
+  };
+
+  const handleEndYearChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+    if (!newValue)
+      setYearEnd(yearEnd)
+    else
+      setYearEnd(newValue);
+  };
+
+  const handleMonthFilterChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+    if (!newValue)
+      setMonthFilter(defaultMonth)
+    else
+      setMonthFilter(newValue);
+  };
+
+  let monthButton;
+  if (selectedTime.period == 'Month') {
+    monthButton = <div className="flex py-4 pl-12">
+      <div className="relative min-w-[50px] h-10">
+        <input className="peer shadow-lg w-45 h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+        placeholder=""
+        onChange={handleMonthFilterChange}/>
+        <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">Month (MM) - Default 1
+        </label>
+      </div>
+    </div>;
+  }
+
   return (
     <div className="">
       <span className="text-4xl">At-fault</span>
@@ -114,10 +171,10 @@ export default function Home() {
         <div id="age-comparison" className="flex w-1/4 flex-row justify-center">
           <span className="pt-1.5 px-4">Age</span>
           <div className="z-10">
-            <Listbox value={selectedAgeComparison} onChange={setAgeComparison} >
+            <Listbox value={selectedAgeRange} onChange={setAgeRanges} >
               <div className="relative">
                 <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">{selectedAgeComparison.operator}</span>
+                  <span className="block truncate">{selectedAgeRange.range}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
                       className="h-5 w-5 text-gray-400"
@@ -132,7 +189,7 @@ export default function Home() {
                   leaveTo="opacity-0"
                 >
                   <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm" >
-                    {ageComparison.map((comp) => (
+                    {ageRanges.map((comp) => (
                       <Listbox.Option
                         className={({ active }) =>
                           `relative cursor-default seelct-none py-2 pl-4 pr-4 ${active ? 'bg-black text-white' : 'text-black'
@@ -147,7 +204,7 @@ export default function Home() {
                               className={`block truncate ${selected ? 'font-medium' : 'font-normal'
                                 }`}
                             >
-                              {comp.operator}
+                              {comp.range}
                             </span>
                             {selected ? (
                               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
@@ -164,14 +221,6 @@ export default function Home() {
             </Listbox>
           </div>
 
-          {/* Age number input box */}
-          <div className="flex w-20">
-            <div className="relative w-full h-9 pl-4">
-              <input className="peer shadow-lg w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900" placeholder=" " />
-              <label className="flex pl-4 w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">Age
-              </label>
-            </div>
-          </div>
         </div>
 
         {/* Race dropdown selection */}
@@ -306,15 +355,20 @@ export default function Home() {
           <div className="flex flex-grow justify-evenly">
             <div className="flex w-60 py-4">
               <div className="relative w-full min-w-[200px] h-10">
-                <input className="peer shadow-lg w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900" placeholder=" " />
-                <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">From
+                <input className="peer shadow-lg w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+                placeholder=" "
+                onChange={handleStartYearChange}/>
+                <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">From - Default 2009
                 </label>
               </div>
             </div>
             {/* to certain year input box */}
             <div className="flex w-60 py-4">
               <div className="relative w-full min-w-[200px] h-10">
-                <input className="peer w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 shadow-lg disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900" placeholder=" " /><label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">To
+                <input className="peer w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 shadow-lg disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+                placeholder=" "
+                onChange={handleEndYearChange} />
+                <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">To - Default 2020
                 </label>
               </div>
             </div>
@@ -370,6 +424,7 @@ export default function Home() {
                 </Transition>
               </div>
             </Listbox>
+            {monthButton}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 ## Table of Contents <a id="table-of-contents"></a>
-1. [Backend Setup](#setup) 
+1. [Backend Setup](#setup)
 2. API Documentation:
    - [Metadata](#metadata)
    - [Query 1](#query1)
@@ -32,7 +32,7 @@ Three options to start Flask Server (which hosts the API endpoints)
 
 ## Query API Documentation
 ### Table Metadata: <a id="metadata"></a>
-Table Metadata API URL: 
+Table Metadata API URL:
 - `http://localhost:5000/api/metadata`
 
 Table Metadata GET request parameters:
@@ -68,7 +68,7 @@ Example Table Metadata API response:
 
 
 ### Query 1 (at-fault): <a id="query1"></a>
-Query 1 API URL: 
+Query 1 API URL:
 - `http://localhost:5000/queries/at-fault`
 
 Query 1 GET request parameters:
@@ -132,7 +132,7 @@ Example Query 1 API response, filtering by `month` returns the same format:
 
 
 ### Query 2 (causes): <a id="query2"></a>
-Query 2 API URL: 
+Query 2 API URL:
 - `http://localhost:5000/queries/causes`
 
 Query 2 GET request parameters:
@@ -186,7 +186,7 @@ Example Query 2 API response, filtering by `county` returns the same format:
 
 
 ### Query 3 (geographic): <a id="query3"></a>
-Query 3 API URL: 
+Query 3 API URL:
 - `http://localhost:5000/queries/geographic`
 
 Query 3 GET request parameters:
@@ -241,7 +241,7 @@ Example Query 3 API response:
 
 
 ### Query 4 (vehicle type): <a id="query4"></a>
-Query 4 API URL: 
+Query 4 API URL:
 - `http://localhost:5000/queries/vehicle-type`
 
 Query 4 GET request parameters:
@@ -268,7 +268,7 @@ Query 4 GET request parameters:
       "old",
       "very old"
   ]
-  ``` 
+  ```
   - `new` - 2017 to 2020
   - `middle` - 2013 to 2016
   - `old` - 2008 to 2012
@@ -307,8 +307,8 @@ Example Query 4 API response:
 
 
 ### Query 5 (geographic): <a id="query5"></a>
-Query 5 API URL: 
-- `http://localhost:5000/queries/geographic`
+Query 5 API URL:
+- `http://localhost:5000/queries/road`
 
 Query 5 GET request parameters:
 - `year_start` - optional, the lower bound of the year filter
