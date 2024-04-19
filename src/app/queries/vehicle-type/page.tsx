@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, ChangeEventHandler } from "react";
 import { Line } from 'react-chartjs-2';
 import { registerables, Chart } from 'chart.js';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { RotatingLines } from 'react-loader-spinner';
+import MonthInputFilter from "@/app/components/ui/MonthInputFilter";
 import axios from 'axios';
 
 
@@ -17,31 +19,27 @@ export default function VehicleType() {
     { id: 2, period: 'Month' }
   ]
 
-  const ageComparison = [
-    { id: 1, operator: 'less than' },
-    { id: 2, operator: 'less than or equal to' },
-    { id: 3, operator: 'greater than' },
-    { id: 4, operator: 'greater than or equal to' },
-    { id: 5, operator: 'eqaul to' },
-    { id: 6, operator: 'not equal' }
+  const vehicleType = [
+    { id: 0, type: 'all'},
+    { id: 1, type: 'motorcycle/moped/scooter' },
+    { id: 2, type: 'passenger car' },
+    { id: 3, type: 'pickup truck' },
+    { id: 4, type: 'large vehicles' }
   ]
 
-  const raceOptions = [
-    { id: 1, race: "White" },
-    { id: 2, race: "Black" },
-    { id: 3, race: "Asian" },
-    { id: 4, race: "Latino" },
+  const vehicleAge = [
+    { id: 0, age: "all", age_value: "" },
+    { id: 1, age: "new - 2017 to 2020", age_value: "new" },
+    { id: 2, age: "middle - 2013 to 2016", age_value: "middle" },
+    { id: 3, age: "old - 2008 to 2012", age_value: "old" },
+    { id: 4, age: "very old - older than 2008", age_value: "very old" },
   ]
 
-  const genderOptions = [
-    { id: 1, gender: "Male" },
-    { id: 2, gender: "Female" }
-  ]
 
   const [selectedTime, setSelectedTime] = useState(timeOptions[0])
-  const [selectedAgeComparison, setAgeComparison] = useState(ageComparison[0])
-  const [selectedRace, setRace] = useState(raceOptions[0])
-  const [selectedGender, setGender] = useState(genderOptions[0])
+  const [selectedVehicleType, setVehicleType] = useState(vehicleType[0])
+  const [selectedVehicleAge, setVehicleAge] = useState(vehicleAge[0])
+  const [loading, setLoading] = useState(false);
 
   const options = {
     maintainAspectRatio: false, // Set to false to allow custom size
@@ -72,8 +70,47 @@ export default function VehicleType() {
 
   const [selectedData, setData] = useState(dummyData)
 
+
+  const yearBegin: number = 2009;
+  const yearEnd: number = 2020;
+  const defaultMonth: number = 1;
+  const [currYearBegin, setYearBegin] = useState(yearBegin);
+  const [currYearEnd, setYearEnd] = useState(yearEnd);
+  const [currMonthFilter, setMonthFilter] = useState(defaultMonth);
+
+  const handleStartYearChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+    if (!newValue)
+      setYearBegin(yearBegin)
+    else
+      setYearBegin(newValue);
+  };
+
+  const handleEndYearChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+    if (!newValue)
+      setYearEnd(yearEnd)
+    else
+      setYearEnd(newValue);
+  };
+
+  const handleMonthFilterChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+    if (!newValue)
+      setMonthFilter(defaultMonth)
+    else
+      setMonthFilter(newValue);
+  };
+
   const updateDataset = () => {
-    axios.get('http://localhost:5000/queries/vehicle-type')
+
+    let yearQuery = `year_start=${currYearBegin}&year_end=${currYearEnd}`;
+    let monthFilter = selectedTime.period == 'Year' ? '' : `&month=${String(currMonthFilter).padStart(2, '0')}`
+    let vehicleTypeFilter = selectedVehicleType.type == 'all' ? '' : `&vehicle_type=${selectedVehicleType.type}`
+    let vehicleAgeFilter = selectedVehicleAge.age == 'all' ? '' : `$vehicle_age=${selectedVehicleAge.age}`
+    let queryString= `?${yearQuery}${monthFilter}${vehicleTypeFilter}${vehicleAgeFilter}`
+    setLoading(true);
+    axios.get(`http://localhost:5000/queries/vehicle-type${queryString}`)
       .then(response => {
         var new_labels = response.data.map((a) => { return a['YEAR'] });
         var new_data_points = response.data.map((b) => { return b['FATALITY_PERCENTAGE'] });
@@ -89,10 +126,17 @@ export default function VehicleType() {
             },
           ]
         })
+        setLoading(false);
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
       });
+  }
+
+  let monthButton;
+  if (selectedTime.period == 'Month') {
+    monthButton = MonthInputFilter(handleMonthFilterChange)
   }
 
   return (
@@ -102,20 +146,29 @@ export default function VehicleType() {
       {/* Graph component - currently just two lines with dummy data */}
       <div className="flex flex-row justify-center">
         <div className="flex flex-row justify-center" style={{ width: '80%', height: '60vh' }}>
-          <Line data={selectedData} options={options} className="bg-white" />
+          { !loading ?
+            <Line data={selectedData} options={options} className="bg-white" /> :
+            <div className="bg-gray-200 rounded-lg flex-grow flex justify-around">
+              <RotatingLines
+                visible={true}
+                width="96"
+                strokeColor="rgba(75,192,192,0.9)"
+                strokeWidth="5"
+                animationDuration="0.75"
+              />
+            </div>}
         </div>
       </div>
 
-      {/* Different input parameters such as time and gender constraints */}
       <div className="pt-8 pb-4 flex justify-evenly" id="input-parameters">
-        {/* Age comparison selection  */}
+
         <div id="age-comparison" className="flex flex-row justify-center">
-          <span className="pt-1.5 px-4">Vehicle Age</span>
+          <span className="pt-1.5 px-4">Vehicle Type</span>
           <div id="age-wrapper" className="z-10">
-            <Listbox value={selectedAgeComparison} onChange={setAgeComparison} >
+            <Listbox value={selectedVehicleType} onChange={setVehicleType} >
               <div className="relative">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">{selectedAgeComparison.operator}</span>
+                <Listbox.Button className="relative w-60 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <span className="block truncate text-center">{selectedVehicleType.type}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
                       className="h-5 w-5 text-gray-400"
@@ -129,23 +182,25 @@ export default function VehicleType() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm" >
-                    {ageComparison.map((comp) => (
+                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                    style={{ top: '0%' }}
+                    >
+                    {vehicleType.map((t) => (
                       <Listbox.Option
                         className={({ active }) =>
                           `relative cursor-default seelct-none py-2 pl-4 pr-4 ${active ? 'bg-black text-white' : 'text-black'
                           }`
                         }
-                        key={comp.id}
-                        value={comp}
+                        key={t.id}
+                        value={t}
                       >
                         {({ selected }) => (
                           <>
                             <span
-                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                              className={`block text-center truncate ${selected ? 'font-medium' : 'font-normal'
                                 }`}
                             >
-                              {comp.operator}
+                              {t.type}
                             </span>
                             {selected ? (
                               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
@@ -162,24 +217,15 @@ export default function VehicleType() {
             </Listbox>
           </div>
 
-          {/* Age number input box */}
-          <div className="flex w-20">
-            <div className="relative w-full h-9 pl-4">
-              <input className="peer shadow-lg w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900" placeholder=" " />
-              <label className="flex pl-4 w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">Age
-              </label>
-            </div>
-          </div>
         </div>
 
-        {/* Race dropdown selection */}
         <div id="race" className="flex flex-row justify-center">
-          <span className="pt-1.5 px-4">Vehicle type</span>
+          <span className="pt-1.5 px-4">Vehicle Age</span>
           <div id="race-wrapper" className="z-10">
-            <Listbox value={selectedRace} onChange={setRace}>
+            <Listbox value={selectedVehicleAge} onChange={setVehicleAge}>
               <div className="relative">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">{selectedRace.race}</span>
+                <Listbox.Button className="relative w-60 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <span className="block truncate text-center ">{selectedVehicleAge.age}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
                       className="h-5 w-5 text-gray-400"
@@ -193,23 +239,25 @@ export default function VehicleType() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm" >
-                    {raceOptions.map((r) => (
+                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                    style={{ top: '0%' }}
+                    >
+                    {vehicleAge.map((v) => (
                       <Listbox.Option
                         className={({ active }) =>
                           `relative cursor-default seelct-none py-2 pl-4 pr-4 ${active ? 'bg-black text-white' : 'text-black'
                           }`
                         }
-                        key={r.id}
-                        value={r}
+                        key={v.id}
+                        value={v}
                       >
                         {({ selected }) => (
                           <>
                             <span
-                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                              className={`block text-center truncate ${selected ? 'font-medium' : 'font-normal'
                                 }`}
                             >
-                              {r.race}
+                              {v.age}
                             </span>
                             {selected ? (
                               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
@@ -249,15 +297,19 @@ export default function VehicleType() {
           <div className="flex flex-grow justify-evenly">
             <div className="flex w-60 py-4">
               <div className="relative w-full min-w-[200px] h-10">
-                <input className="peer shadow-lg w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900" placeholder=" " />
-                <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">From
+                <input className="peer shadow-lg w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+                placeholder=""
+                onChange={handleStartYearChange}/>
+                <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">From - Default 2009
                 </label>
               </div>
             </div>
             {/* to certain year input box */}
             <div className="flex w-60 py-4">
               <div className="relative w-full min-w-[200px] h-10">
-                <input className="peer w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 shadow-lg disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900" placeholder=" " /><label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">To
+                <input className="peer w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 shadow-lg disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+                placeholder=" "
+                onChange={handleEndYearChange}/><label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">To - Default 2020
                 </label>
               </div>
             </div>
@@ -282,7 +334,9 @@ export default function VehicleType() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm" >
+                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                    style={{ top: '-50%' }}
+                    >
                     {timeOptions.map((time) => (
                       <Listbox.Option
                         className={({ active }) =>
@@ -313,6 +367,7 @@ export default function VehicleType() {
                 </Transition>
               </div>
             </Listbox>
+            {monthButton}
           </div>
         </div>
       </div>
