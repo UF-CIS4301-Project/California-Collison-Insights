@@ -46,19 +46,20 @@ def fetch_query_road(year_start, year_end, month, county, road_condition, lighti
             UPPER({collision_table}.county_location) AS county_location,
             EXTRACT(YEAR FROM {collision_table}.collision_datetime) AS year,
             EXTRACT(MONTH FROM {collision_table}.collision_datetime) AS month,
-            {county_table}.population_density,
-            {collision_table}.collision_severity
+            {collision_table}.collision_severity,
+            {county_table}.population_density
         FROM
             {collision_table}
         JOIN
-            {county_table} ON UPPER({collision_table}.county_location) = UPPER({county_table}.name)
+            {county_table} 
+                ON UPPER({collision_table}.county_location) = UPPER({county_table}.name)
+                AND EXTRACT(YEAR FROM {collision_table}.collision_datetime) = {county_table}.year
         WHERE 1=1
             {where_clause}
             {time_range_where_clause}
     ),
     SeverityMetrics AS (
         SELECT
-            county_location AS county_name,
             year,
             AVG(population_density) AS average_population_density,
             AVG(CASE 
@@ -69,21 +70,38 @@ def fetch_query_road(year_start, year_end, month, county, road_condition, lighti
                     WHEN collision_severity = 'property damage only' THEN 0
                     ELSE NULL
                 END) AS average_severity
+
         FROM
             RelevantCollisions
         GROUP BY
             county_location,
             year
     )
-    SELECT
-        county_name,
-        year,
-        ROUND(average_population_density, 2),
-        ROUND(average_severity, 2)
-    FROM
-        SeverityMetrics
-    ORDER BY
-        year
+
     """
+    if county is not None:
+        query += f"""
+        SELECT
+            year,
+            ROUND(average_population_density, 2) AS average_population_density,
+            ROUND(average_severity, 2) AS average_severity
+        FROM
+            SeverityMetrics
+        ORDER BY
+            year
+        """
+    else:
+        query += f"""
+        SELECT
+            year,
+            ROUND(AVG(average_population_density), 2) AS average_population_density,
+            ROUND(AVG(average_severity), 2) AS average_severity
+        FROM
+            SeverityMetrics
+        GROUP BY
+            year
+        ORDER BY
+            year
+        """
 
     return query

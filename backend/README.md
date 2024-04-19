@@ -344,36 +344,30 @@ Query 5 GET request parameters:
     ]
   ```
 
-
-
 Example Query 5 response:
   ```json
-  [
-      {
-          "COUNTY_NAME": "ALAMEDA",
-          "ROUND(AVERAGE_POPULATION_DENSITY,2)": 2103.41,
-          "ROUND(AVERAGE_SEVERITY,2)": 0.13,
-          "YEAR": 2015
-      },
-      {
-          "COUNTY_NAME": "ALPINE",
-          "ROUND(AVERAGE_POPULATION_DENSITY,2)": 1.57,
-          "ROUND(AVERAGE_SEVERITY,2)": 0.19,
-          "YEAR": 2015
-      },
-      {
-          "COUNTY_NAME": "AMADOR",
-          "ROUND(AVERAGE_POPULATION_DENSITY,2)": 64.11,
-          "ROUND(AVERAGE_SEVERITY,2)": 0.2,
-          "YEAR": 2015
-      },
-      {
-          "COUNTY_NAME": "BUTTE",
-          "ROUND(AVERAGE_POPULATION_DENSITY,2)": 134.14,
-          "ROUND(AVERAGE_SEVERITY,2)": 0.19,
-          "YEAR": 2015
-      }
-  ]
+[
+    {
+        "AVERAGE_POPULATION_DENSITY": 370.29,
+        "AVERAGE_SEVERITY": 0.17,
+        "YEAR": 2009
+    },
+    {
+        "AVERAGE_POPULATION_DENSITY": 373.15,
+        "AVERAGE_SEVERITY": 0.17,
+        "YEAR": 2010
+    },
+    {
+        "AVERAGE_POPULATION_DENSITY": 377.32,
+        "AVERAGE_SEVERITY": 0.17,
+        "YEAR": 2011
+    },
+    {
+        "AVERAGE_POPULATION_DENSITY": 380.73,
+        "AVERAGE_SEVERITY": 0.18,
+        "YEAR": 2012
+    }
+]
   ```
 
 [Back to Table of Contents](#table-of-contents)
