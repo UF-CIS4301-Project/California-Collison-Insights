@@ -26,8 +26,7 @@ function QueriesPage() {
       key: "road",
       value:
         "Effect of Road Conditions and Population Density on Collision Severity",
-    },
-    { key: "custom", value: "Create Custom Query" },
+    }
   ];
 
   return (

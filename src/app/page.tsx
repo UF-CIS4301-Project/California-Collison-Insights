@@ -1,18 +1,8 @@
 "use client";
 
-import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-} from "@nextui-org/react";
-import WelcomeBar from "./components/ui/welcome-bar";
 import DataSetButton from "./components/ui/DataSetButton";
-import SideNav from "./components/ui/sidenav";
 import axios from 'axios';
 
 function IndexPage() {
@@ -33,11 +23,7 @@ function IndexPage() {
       <h1 className="font-bold text-3xl mb-2">Home</h1>
       <br />
       <div className="p-10 text-justify rounded shadow-lg bg-white">
-        Welcome Spiel - Lorem ipsum dolor sit amet consectetur, adipisicing
-        elit. Delectus, et sint nulla beatae non eveniet accusantium ratione
-        velit corrupti labore odio quam voluptatum recusandae culpa quae
-        nesciunt corporis. Architecto, asperiores? Lorem ipsum dolor sit amet
-        consectetur adipisicing elit.
+        Welcome! Here you will be able to analyze
         <br />
         <br />
         Click

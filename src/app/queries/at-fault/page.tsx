@@ -178,7 +178,7 @@ export default function Home() {
           <div className="z-10">
             <Listbox value={selectedAgeRange} onChange={setAgeRanges} >
               <div className="relative">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <Listbox.Button className="relative text-center w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <span className="block truncate">{selectedAgeRange.range}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
@@ -193,8 +193,8 @@ export default function Home() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
-                    style={{ top: '-100%' }}>
+                  <Listbox.Options className="absolute mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                    style={{ top: '0%' }}>
                     {ageRanges.map((comp) => (
                       <Listbox.Option
                         className={({ active }) =>
@@ -207,7 +207,7 @@ export default function Home() {
                         {({ selected }) => (
                           <>
                             <span
-                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                              className={`block truncate text-center ${selected ? 'font-medium' : 'font-normal'
                                 }`}
                             >
                               {comp.range}
@@ -235,7 +235,7 @@ export default function Home() {
           <div className="z-10">
             <Listbox value={selectedRace} onChange={setRace} >
               <div className="relative">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <Listbox.Button className="relative text-center w-28 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <span className="block truncate">{selectedRace.race}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
@@ -250,8 +250,8 @@ export default function Home() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
-                    style={{ top: '-100%' }}>
+                  <Listbox.Options className="absolute mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                    style={{ top: '0%' }}>
                     {raceOptions.map((r) => (
                       <Listbox.Option
                         className={({ active }) =>
@@ -264,7 +264,7 @@ export default function Home() {
                         {({ selected }) => (
                           <>
                             <span
-                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                              className={`block truncate text-center ${selected ? 'font-medium' : 'font-normal'
                                 }`}
                             >
                               {r.race}
@@ -291,7 +291,7 @@ export default function Home() {
           <div className="z-10">
             <Listbox value={selectedGender} onChange={setGender} >
               <div className="relative">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <Listbox.Button className="relative text-center w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <span className="block truncate">{selectedGender.gender}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
@@ -306,8 +306,8 @@ export default function Home() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
-                    style={{ top: '-100%' }}>
+                  <Listbox.Options className="absolute mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                    style={{ top: '0%' }}>
                     {genderOptions.map((g) => (
                       <Listbox.Option
 
@@ -321,7 +321,7 @@ export default function Home() {
                         {({ selected }) => (
                           <>
                             <span
-                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                              className={`block truncate text-center ${selected ? 'font-medium' : 'font-normal'
                                 }`}
                             >
                               {g.gender}
@@ -391,7 +391,7 @@ export default function Home() {
             <span className="pr-4">By</span>
             <Listbox value={selectedTime} onChange={setSelectedTime}>
               <div className="relative">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <Listbox.Button className="relative text-center w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <span className="block truncate">{selectedTime.period}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
@@ -406,7 +406,8 @@ export default function Home() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm" >
+                  <Listbox.Options className="absolute mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                  style={{ top: '0%' }}>
                     {timeOptions.map((time) => (
                       <Listbox.Option
                         className={({ active }) =>
@@ -419,7 +420,7 @@ export default function Home() {
                         {({ selected }) => (
                           <>
                             <span
-                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                              className={`block truncate text-center ${selected ? 'font-medium' : 'font-normal'
                                 }`}
                             >
                               {time.period}

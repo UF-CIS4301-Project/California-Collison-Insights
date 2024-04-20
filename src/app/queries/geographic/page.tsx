@@ -20,10 +20,6 @@ import { RotatingLines } from 'react-loader-spinner';
 
 
 export default function Geographic() {
-  const timeOptions = [
-    { id: 1, period: 'Year' },
-    { id: 2, period: 'Month' }
-  ]
 
   const timeOfDayOptions = [
     { id: 0, time: 'All', value: '' },
@@ -47,7 +43,7 @@ export default function Geographic() {
   ]
 
   let maxPerc: number = -1.00;
-  let currYear: number = 2010;
+  let currYear: number = 2015;
   let currCounty: string = "Solano County";
   let accident_percentage_num = 1.0;
   let defaultMonth = 0;
@@ -64,7 +60,6 @@ export default function Geographic() {
   const [year, setYear] = useState(currYear)
   const [percentage, setPercentage] = useState(accident_percentage_str);
   const [currentMapData, setMapData] = useState(county_percentage_map);
-  const [selectedTime, setSelectedTime] = useState(timeOptions[0])
   const [selectedTimeOfDay, setTimeOfDay] = useState(timeOfDayOptions[0])
   const [selectedDay, setDay] = useState(dayOfWeek[0])
   const [selectedCounty, setCounty] = useState(currCounty);
@@ -174,7 +169,6 @@ export default function Geographic() {
                           key={geo.rsmKey}
                           geography={geo}
                           stroke="#FFFFFF"
-                          // {loading ? <>Loading...</> : <>{selectedTuples.toLocaleString()}</>}
                           fill={loaded ? `${colorScale(currentMapData[geo.properties.name.toLowerCase()])}` : 'rgb(0,0,0)'}
                           style={{
                             hover: {
@@ -211,25 +205,26 @@ export default function Geographic() {
           <div className="flex flex-col py-4 items-center justify-center" id="time option selector">
             <div className="w-[90vh] py-4">
               <div className="flex justify-between">
-                <span className="text-2xl pb-2">2000</span>
+                <span className="text-2xl pb-2">2009</span>
                 <span className="">{year}</span>
                 <span className="text-2xl pb-2">2020</span>
               </div>
               {/* Range slider to select the year */}
-              <input id="steps-range" type="range" min="2000" max="2020" defaultValue="2010" step="1" onChange={(e) => onValueChange(e.target.value)} className="w-full flex flex-row h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+              <input id="steps-range" type="range" min="2009" max="2020" defaultValue="2015" step="1" onChange={(e) => onValueChange(e.target.value)} className="w-full flex flex-row h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
             </div>
           </div>
 
           <div className="flex h-1/2 flex-row items-center w-full pt-4">
-            {monthButton}
+            <div className="w-1/5">{monthButton}</div>
+
             {/* Time of day dropdown menu */}
-            <div className="flex flex-row items-center text-lg w-1/3 justify-center">
+            <div className="flex flex-row items-center text-lg w-1/2 justify-center">
               <span className="pr-4">Time of day</span>
               <div className="py-2"> {/* Wrapper Div */}
                 <Listbox value={selectedTimeOfDay} onChange={setTimeOfDay}>
                   <div className="">
-                    <Listbox.Button className="relative w-80px cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                      <span className="block truncate">{selectedTimeOfDay.time}</span>
+                    <Listbox.Button className="relative text-center w-30 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                      <span className="block truncate text-center">{selectedTimeOfDay.time}</span>
                       <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronUpDownIcon
                           className="h-5 w-5 text-gray-400"
@@ -243,8 +238,8 @@ export default function Geographic() {
                       leaveFrom="opacity-100"
                       leaveTo="opacity-0"
                     >
-                      <Listbox.Options className="absolute mt-1 max-h-60 w-100px overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
-                        style={{ top: '80%' }}>
+                      <Listbox.Options className="absolute mt-1 max-h-40 w-30 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                        style={{ top: '81.5%' }}>
                         {timeOfDayOptions.map((time) => (
                           <Listbox.Option
                             className={({ active }) =>
@@ -257,7 +252,7 @@ export default function Geographic() {
                             {({ selected }) => (
                               <>
                                 <span
-                                  className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                  className={`block text-center truncate ${selected ? 'font-medium' : 'font-normal'
                                     }`}
                                 >
                                   {time.time}
@@ -278,13 +273,13 @@ export default function Geographic() {
               </div>
             </div>
 
-            <div className="flex flex-rows items-center text-lg w-1/3 justify-center">
+            <div className="flex flex-rows items-center text-lg w-1/2 justify-center">
               <span className="pr-4">Day of Week</span>
               <div className="py-2 flex flex-col items-center">
                 <Listbox value={selectedDay} onChange={setDay}>
                   <div className="">
-                    <Listbox.Button className="relative w-80px cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                      <span className="block truncate">{selectedDay.day}</span>
+                    <Listbox.Button className="relative w-36 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                      <span className="block truncate text-center">{selectedDay.day}</span>
                       <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronUpDownIcon
                           className="h-5 w-5 text-gray-400"
@@ -298,8 +293,8 @@ export default function Geographic() {
                       leaveFrom="opacity-100"
                       leaveTo="opacity-0"
                     >
-                      <Listbox.Options className="absolute mt-1 max-h-60 w-100px overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
-                        style={{ top: '80%' }}
+                      <Listbox.Options className="absolute mt-1 max-h-40 w-36 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                        style={{ top: '81.5%' }}
                       >
                         {dayOfWeek.map((d) => (
                           <Listbox.Option
@@ -313,7 +308,7 @@ export default function Geographic() {
                             {({ selected }) => (
                               <>
                                 <span
-                                  className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                  className={`block truncate text-center ${selected ? 'font-medium' : 'font-normal'
                                     }`}
                                 >
                                   {d.day}
@@ -334,7 +329,7 @@ export default function Geographic() {
               </div>
             </div>
 
-            <div id="search-button" className="flex w-1/3 flex-row justify-center">
+            <div id="search-button" className="flex w-1/4 flex-row justify-center">
               <button className="flex bg-white shadow-lg hover:bg-black hover:text-bold text-gray-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded"
                 onClick={updateDataset}>
                 Enter Query
