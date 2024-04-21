@@ -31,7 +31,7 @@ export default function SideNav() {
       <button
         className="flex items-center justify-center flex-grow p-10 w-full text-xl font-semibold hover:bg-gray-200"
         onClick={() => {
-          router.push("/queries");
+          router.push("/datasets");
         }}
       >
         Datasets

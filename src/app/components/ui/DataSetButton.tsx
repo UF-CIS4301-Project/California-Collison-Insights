@@ -1,9 +1,10 @@
+import Image from "next/image";
 import React from "react";
 
 const DataSetButton = (props) => {
   return (
-    <div className="flex flex-col rounded overflow-hidden shadow-lg hover:bg-gray-100 bg-white">
-      <div className="flex justify-center my-2">
+    <div className="flex h-full mx-1 flex-col rounded overflow-hidden shadow-lg hover:bg-gray-100 bg-white">
+      <div className="flex justify-center my-4">
         <img className="w-1/2" src={props.imageSource} alt="tempPic" />
       </div>
       <div className="px-6 py-4">
