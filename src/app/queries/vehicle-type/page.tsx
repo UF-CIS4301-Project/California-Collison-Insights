@@ -111,9 +111,10 @@ export default function VehicleType() {
     let yearQuery = `year_start=${currNumStartYear.year}&year_end=${currNumEndYear.year}`;
     let monthFilter = selectedTime.period == 'Year' ? '' : `&month=${String(currMonthFilter).padStart(2, '0')}`
     let vehicleTypeFilter = selectedVehicleType.type == 'all' ? '' : `&vehicle_type=${selectedVehicleType.type}`
-    let vehicleAgeFilter = selectedVehicleAge.age == 'all' ? '' : `$vehicle_age=${selectedVehicleAge.age}`
+    let vehicleAgeFilter = selectedVehicleAge.age == 'all' ? '' : `&vehicle_age=${selectedVehicleAge.age_value}`
     let queryString= `?${yearQuery}${monthFilter}${vehicleTypeFilter}${vehicleAgeFilter}`
     setLoading(true);
+    console.log(queryString)
     axios.get(`http://localhost:5000/queries/vehicle-type${queryString}`)
       .then(response => {
         var new_labels = response.data.map((a) => { return a['YEAR'] });
@@ -143,9 +144,10 @@ export default function VehicleType() {
     let yearQuery = `year_start=${currNumStartYear.year}&year_end=${currNumEndYear.year}`;
     let monthFilter = selectedTime.period == 'Year' ? '' : `&month=${String(currMonthFilter).padStart(2, '0')}`
     let vehicleTypeFilter = selectedVehicleType2.type == 'all' ? '' : `&vehicle_type=${selectedVehicleType2.type}`
-    let vehicleAgeFilter = selectedVehicleAge2.age == 'all' ? '' : `$vehicle_age=${selectedVehicleAge2.age}`
+    let vehicleAgeFilter = selectedVehicleAge2.age == 'all' ? '' : `&vehicle_age=${selectedVehicleAge2.age_value}`
     let queryString = `?${yearQuery}${monthFilter}${vehicleTypeFilter}${vehicleAgeFilter}`
     setLoading(true);
+    console.log(queryString)
     axios.get(`http://localhost:5000/queries/vehicle-type${queryString}`)
       .then(response => {
         var new_labels = response.data.map((a) => { return a['YEAR'] });
@@ -395,7 +397,7 @@ export default function VehicleType() {
               <Listbox value={selectedVehicleAge2} onChange={setVehicleAge2}>
                 <div className="relative">
                   <Listbox.Button className="relative w-60 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <span className="block truncate text-center ">{selectedVehicleAge.age}</span>
+                    <span className="block truncate text-center ">{selectedVehicleAge2.age}</span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <ChevronUpDownIcon
                         className="h-5 w-5 text-gray-400"
