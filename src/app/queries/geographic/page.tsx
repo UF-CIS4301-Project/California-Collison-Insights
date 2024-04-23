@@ -43,7 +43,7 @@ export default function Geographic() {
   ]
 
   let maxPerc: number = -1.00;
-  let currYear: number = 2015;
+  let currYear: number = 2014;
   let currCounty: string = "Solano County";
   let accident_percentage_num = 1.0;
   let defaultMonth = 0;
@@ -210,16 +210,16 @@ export default function Geographic() {
                 <span className="text-2xl pb-2">2020</span>
               </div>
               {/* Range slider to select the year */}
-              <input id="steps-range" type="range" min="2009" max="2020" defaultValue="2015" step="1" onChange={(e) => onValueChange(e.target.value)} className="w-full flex flex-row h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+              <input id="steps-range" type="range" min="2009" max="2020" defaultValue="2014" step="1" onChange={(e) => onValueChange(e.target.value)} className="w-full flex flex-row h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
             </div>
           </div>
 
-          <div className="flex h-1/2 flex-row items-center w-full pt-4">
-            <div className="w-1/5">{monthButton}</div>
+          <div className="flex h-1/2 flex-row items-center w-full pt-4 justify-between">
+            <div className="">{monthButton}</div>
 
             {/* Time of day dropdown menu */}
-            <div className="flex flex-row items-center text-lg w-1/2 justify-center">
-              <span className="pr-4">Time of day</span>
+            <div className="flex flex-row items-center text-lg justify-center">
+              <span className="pr-4 text-md">Time of day</span>
               <div className="py-2"> {/* Wrapper Div */}
                 <Listbox value={selectedTimeOfDay} onChange={setTimeOfDay}>
                   <div className="">
@@ -273,8 +273,8 @@ export default function Geographic() {
               </div>
             </div>
 
-            <div className="flex flex-rows items-center text-lg w-1/2 justify-center">
-              <span className="pr-4">Day of Week</span>
+            <div className="flex flex-rows items-center text-lg justify-center">
+              <span className="pr-4 text-md">Day of Week</span>
               <div className="py-2 flex flex-col items-center">
                 <Listbox value={selectedDay} onChange={setDay}>
                   <div className="">
@@ -329,7 +329,7 @@ export default function Geographic() {
               </div>
             </div>
 
-            <div id="search-button" className="flex w-1/4 flex-row justify-center">
+            <div id="search-button" className="flex flex-row justify-center">
               <button className="flex bg-white shadow-lg hover:bg-black hover:text-bold text-gray-700 font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded"
                 onClick={updateDataset}>
                 Enter Query

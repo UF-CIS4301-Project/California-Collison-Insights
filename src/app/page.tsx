@@ -44,10 +44,12 @@ function IndexPage() {
   return (
     <main>
       {/* homepage content */}
-      <h1 className="font-bold text-3xl mb-2">Home</h1>
       <br />
-      <div className="p-10 text-justify rounded shadow-lg bg-white">
-        Welcome! Here you will be able to analyze
+      <div className="p-6 text-justify rounded shadow-lg bg-white">
+        <span className="font-bold">Welcome to California Collision Insights!</span>
+        <br/>
+        <br/>
+        At CCI, we're dedicated to bringing you awareness about trends occuring on the roads of California. Whether you're here to find patterns between accident rates and budget expenditures to use in your next legislative meeting, or simply to explore and discover something new, we're thrilled to have you join us on this journey.
         <br />
         <br />
         Click
@@ -69,7 +71,7 @@ function IndexPage() {
         >
           &nbsp;<u>here</u>&nbsp;
         </button>
-        for total number of tuples in database:{" "}
+        for total number of datapoints in our database:{" "}
         {loading ? <>Loading...</> : <>{selectedTuples.toLocaleString()}</>}
       </div>
       <div className="text-center my-10 text-3xl">

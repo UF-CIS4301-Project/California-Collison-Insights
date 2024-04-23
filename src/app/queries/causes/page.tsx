@@ -97,6 +97,23 @@ export default function CausesVsBudgets() {
     { id: 57, county: "Yuba" }
   ];
 
+  const years = [
+    { id: 1, year: 2009 },
+    { id: 2, year: 2010 },
+    { id: 3, year: 2011 },
+    { id: 4, year: 2012 },
+    { id: 5, year: 2013 },
+    { id: 6, year: 2014 },
+    { id: 7, year: 2015 },
+    { id: 8, year: 2016 },
+    { id: 9, year: 2017 },
+    { id: 10, year: 2018 },
+    { id: 11, year: 2019 },
+    { id: 12, year: 2020 }
+  ];
+
+  const [currNumStartYear, setNumStartYear] = useState(years[0]);
+  const [currNumEndYear, setNumEndYear] = useState(years[11]);
 
   const yearBegin: number = 2009;
   const yearEnd: number = 2020;
@@ -134,16 +151,16 @@ export default function CausesVsBudgets() {
     datasets: [
       {
         yAxisID: "left-y-axis",
-        label: 'First dataset',
-        data: [33, 53, 85, 41, 44, 65],
+        label: 'Dummy Dataset 1',
+        data: [0,0,0,0,0,0],
         fill: true,
         backgroundColor: 'rgba(75,192,192,0.2)',
         borderColor: 'rgba(75,192,192,1)',
       },
       {
         yAxisID: "left-y-axis",
-        label: 'Second dataset',
-        data: [33, 25, 35, 51, 54, 76],
+        label: 'Dummy Dataset 2',
+        data: [0,0,0,0,0,0],
         fill: false,
         borderColor: '#742774',
       },
@@ -163,22 +180,6 @@ export default function CausesVsBudgets() {
       setMonthFilter(newValue);
   };
 
-  const handleStartYearChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    const newValue = parseInt(event.target.value, 10);
-    if (!newValue)
-      setYearBegin(yearBegin)
-    else
-      setYearBegin(newValue);
-  };
-
-  const handleEndYearChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    const newValue = parseInt(event.target.value, 10);
-    if (!newValue)
-      setYearEnd(yearEnd)
-    else
-      setYearEnd(newValue);
-  };
-
   let monthButton;
   if (selectedTime.period == 'Month') {
     monthButton = MonthInputFilter(handleMonthFilterChange);
@@ -186,7 +187,7 @@ export default function CausesVsBudgets() {
 
   const updateDataset = () => {
     setLoading(false);
-    let yearString = `year_start=${currYearBegin}&year_end=${currYearEnd}`
+    let yearString = `year_start=${currNumStartYear.year}&year_end=${currNumEndYear.year}`
     let monthFilter = selectedTime.period == 'Year' ? '' : `&month=${String(currMonthFilter).padStart(2, '0')}`
     let countyFilter = selectedCounty.county == 'All' ? '' : `&county=${selectedCounty.county}`;
     let causeFilter = selectedCause.cause == 'All' ? '' : `&accident_cause=${selectedCause.cause}`
@@ -228,7 +229,7 @@ export default function CausesVsBudgets() {
 
   return (
     <div className="">
-      <span className="text-4xl">Causes vs Budgets</span>
+      <span className="text-4xl">Possible Cause of Accident vs California Transportation Budget</span>
 
       {/* Graph component - currently just two lines with dummy data */}
       <div className="flex flex-row justify-center">
@@ -255,7 +256,7 @@ export default function CausesVsBudgets() {
           <div id="listbox-wrapper" className="z-10 w-60">
             <Listbox value={selectedCause} onChange={setCause} >
               <div className="relative">
-                <Listbox.Button className="text-center relative w-52 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <Listbox.Button className="text-center relative w-60 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <span className="block truncate">{selectedCause.cause}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
@@ -307,10 +308,10 @@ export default function CausesVsBudgets() {
 
         <div id="" className="flex w-1/3 flex-row justify-center">
           <span className="pt-1.5 px-4">County</span>
-          <div id="gender-wrapper" className="z-10 w-36">
+          <div id="gender-wrapper" className="z-10">
             <Listbox value={selectedCounty} onChange={setCounty} >
               <div className="relative">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <Listbox.Button className="relative w-40 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <span className="block truncate text-center">{selectedCounty.county}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
@@ -325,7 +326,7 @@ export default function CausesVsBudgets() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute mt-1 max-h-32 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                  <Listbox.Options className="absolute mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
                   style={{ top: "0%" }}>
                     {countyList.map((c) => (
                       <Listbox.Option
@@ -381,21 +382,112 @@ export default function CausesVsBudgets() {
         <div id="date-selector" className="flex justify-evenly py-4">
           <div className="flex flex-grow justify-evenly">
             <div className="flex w-60 py-4">
-              <div className="relative w-full min-w-[200px] h-10">
-                <input className="peer shadow-lg w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900" placeholder=" "
-                  onChange={handleStartYearChange} />
-                <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">From - Default 2009
-                </label>
+              <span className="pr-4 flex items-center">From</span>
+              <div id="listbox-wrapper" className="">
+                <Listbox value={currNumStartYear} onChange={setNumStartYear} >
+                  <div className="relative">
+                    <Listbox.Button className="text-center relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                      <span className="block truncate">{currNumStartYear.year}</span>
+                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                        <ChevronUpDownIcon
+                          className="h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </Listbox.Button>
+                    <Transition
+                      as={Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="z-20 absolute mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                        style={{ top: "-450%" }}>
+                        {years.map((y) => (
+                          <Listbox.Option
+                            className={({ active }) =>
+                              `relative cursor-default seelct-none py-2 pl-4 pr-4 ${active ? 'bg-black text-white' : 'text-black'
+                              }`
+                            }
+                            key={y.id}
+                            value={y}
+                          >
+                            {({ selected }) => (
+                              <>
+                                <span
+                                  className={`block truncate text-center ${selected ? 'font-medium' : 'font-normal'
+                                    }`}
+                                >
+                                  {y.year}
+                                </span>
+                                {selected ? (
+                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
+                                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </Listbox>
               </div>
             </div>
             {/* to certain year input box */}
             <div className="flex w-60 py-4">
-              <div className="relative w-full min-w-[200px] h-10">
-                <input className="peer w-full h-full bg-white text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 shadow-lg disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
-                  placeholder=" "
-                  onChange={handleEndYearChange} />
-                <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">To - Default 2020
-                </label>
+              <span className="pr-4 flex items-center">To</span>
+              <div id="listbox-wrapper" className="">
+                <Listbox value={currNumEndYear} onChange={setNumEndYear} >
+                  <div className="relative">
+                    <Listbox.Button className="text-center relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-lg focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                      <span className="block truncate">{currNumEndYear.year}</span>
+                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                        <ChevronUpDownIcon
+                          className="h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </Listbox.Button>
+                    <Transition
+                      as={Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="z-20 absolute mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                        style={{ top: "-450%" }}>
+                        {years.map((y) => (
+                          <Listbox.Option
+                            className={({ active }) =>
+                              `relative cursor-default seelct-none py-2 pl-4 pr-4 ${active ? 'bg-black text-white' : 'text-black'
+                              }`
+                            }
+                            key={y.id}
+                            value={y}
+                          >
+                            {({ selected }) => (
+                              <>
+                                <span
+                                  className={`block truncate text-center ${selected ? 'font-medium' : 'font-normal'
+                                    }`}
+                                >
+                                  {y.year}
+                                </span>
+                                {selected ? (
+                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white">
+                                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </Listbox>
               </div>
             </div>
           </div>
@@ -419,8 +511,8 @@ export default function CausesVsBudgets() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute mt-1 max-h-32 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
-                  style={{ top: "0%" }}>
+                  <Listbox.Options className="absolute mt-1 max-h-32 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm z-50"
+                  style={{ top: "-140%" }}>
                     {timeOptions.map((time) => (
                       <Listbox.Option
                         className={({ active }) =>
