@@ -14,7 +14,7 @@
     "@nextui-org/react": "^2.2.10",
     "@types/react-simple-maps": "^3.0.4",
     "autoprefixer": "^10.4.19",
-    "axios": "^1.6.8",
+    "axios": "^1.7.4",
     "chart.js": "4.4.2",
     "d3-scale": "^4.0.2",
     "next": "14.1.0",
